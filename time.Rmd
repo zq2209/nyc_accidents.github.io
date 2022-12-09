@@ -24,9 +24,9 @@ source("code/general_formatting.R")
 
 ### Car Accident over Time
 
-In this section, we'll focus on the trend of car accidents over time. We will analyse the pattern that number of car accidents follows through hour, day, and month among five boroughs.
+In this section, we will explore the trend of car accidents over time. We will analyze the pattern of number of car accidents followed through hour, day, and month in five boroughs.
 
-### Total accidents over month by borough
+### Total Accidents over Month by Borough
 
 ```{r, message=FALSE, warning=FALSE}
 accidents1 %>% 
@@ -55,9 +55,9 @@ accidents1 %>%
   facet_wrap(~ borough, nrow = 1)
 ```
 
-This graph shows the total number of accidents in 5 boroughs from January to August in 2020. We can see that in January, February, and March, the accident numbers in these boroughs are much higher than in other months, and the accident numbers in April is the lowest for 5 boroughs. Also, Brooklyn has the largest accident number and Saten Island has the smallest accident number among all boroughs in every month in New York.
+This graph shows the total number of accidents in 5 boroughs from January to August in 2020. We can see that in January, February, and March, the accident numbers in these boroughs are much higher than in other months, and the accident numbers in April are the lowest for 5 boroughs. Also, Brooklyn has the largest accident number and Staten Island has the smallest accident number among all boroughs in every month in New York.
 
-### Total accidents over weekday 
+### Total Accidents over Weekday 
 
 ```{r, message=FALSE, warning=FALSE}
 accidents1 %>% 
@@ -83,9 +83,9 @@ accidents1 %>%
     )
 ```
 
-This plot shows the total accident number over weekday by borough. We can see that 5 boroughs have a similar trend, and the accident number is the largest on Friday and lowest on Sunday. Brooklyn also has the largest daily accident number and Staten Island has the lowest.
+Next, this plot shows the total accident number over weekday by borough. We can tell that 5 boroughs have a similar trend, and the accident number is the highest on Friday and lowest on Sunday. Brooklyn has the highest daily accident number and Staten Island has the lowest in 5 boroughs.
 
-### Total accidents over hour
+### Total Accidents over Hour
 
 ```{r, message=FALSE, warning=FALSE}
 accidents1 %>%
@@ -105,9 +105,9 @@ accidents1 %>%
   facet_wrap(~ borough, nrow = 2)
 ```
 
-This plot shows the total accident number during 24 hours of a day by borough. We can see that 5 boroughs have a similar daily trend. The number of accidents is relatively low from 0:00 am to 6:00 am, then increases and keep high in 8:00 am to 17:00 pm, and drops until 24:00 pm.
+This plot shows the total accident number during 24 hours of a day by borough. We can see that 5 boroughs have a similar daily trend. The number of accidents is relatively low from 12:00 am to 6:00 am, then increases and keeps high from 8:00 am to 5:00 pm, and drops until 12:00 am.
 
-### Total accidents in different part of day by weekdays
+### Total Accidents in Different Part of a Day
 
 ```{r, message=FALSE, warning=FALSE}
 accidents1 %>%
@@ -122,11 +122,11 @@ accidents1 %>%
         legend.position = "none",
         plot.title = element_text(hjust = 0.5)) +
   labs(
-    title = "Number of accidents in different parts of day by weekdays",
+    title = "Number of Accidents in Different Parts of Day by Weekday",
     x = "Hour",
-    y = "Number of accidents") +
+    y = "Number of Accidents") +
   scale_x_continuous(limits = c(0, 23)) +
   facet_wrap(~ weekday, nrow = 2) 
 ```
 
-By dividing the number of car accidents by weekdays and hours, we can find that the number of car accidents tends to increase and then decrease during the day. Among them, 13:00 to 19:00 is the peak period of car accidents. During the week, the number of crashes is higher on weekdays than on weekends, and the peak of crashes is higher on weekdays. The reason for the above may be that people are more likely to be involved in crashes on weekdays between 13:00 and 19:00, when they are commuting in the rush hours. On weekends, when people spend more time at home, so the number of car accidents is relatively lower.
+By stratifying the number of car accidents by weekdays and hours, we found out the number of car accidents tends to increase and then decrease during the day. The number of accidents reached the peak from 1:00 pm to 7:00 pm. During the week, the number of accidents is higher on weekdays than on weekends, and the maximum number of accidents is higher on weekdays. The reason for this phenomenon might be that people are more likely to be involved in accidents on weekdays between 1:00 pm and 7:00 pm, when they are commuting in rush hours. On weekends, people will spend more time at home, so the number of car accidents is relatively lower.
