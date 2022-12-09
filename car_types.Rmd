@@ -1,0 +1,47 @@
+---
+title: "Car Accidents by Car Type"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+We then explored the number of car accidents by vehicle types. 
+
+```{r, message=FALSE, warning=FALSE}
+accidents2 = accidents1 %>% 
+  group_by(vehicle_type_code_1) %>% 
+  summarize(obs = n()) %>% 
+  arrange(desc(obs))
+
+accidents_cartype_bar = 
+  accidents2 %>% 
+  filter(obs > 100) %>%
+  filter(!is.na(vehicle_type_code_1)) %>% 
+  filter(obs > 500) %>% 
+  mutate(vehicle_type_code_1 = fct_reorder(vehicle_type_code_1, obs)) %>% 
+  ggplot(aes(x = vehicle_type_code_1, y = obs, fill = vehicle_type_code_1)) +
+  geom_bar(stat = "identity") + 
+  theme_classic() + 
+  labs(title = "Bar plot of No. of Accidents by car type", 
+       y = "No of Accidents", 
+       x = "Car type") +
+  geom_text(size = 3, aes(label = obs), position = position_dodge(width=0.9), vjust=-0.25) + 
+  ylim(0, 50000)
+
+accidents_cartype_bar + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+```
+
+The plot shows the frequency (>500) of accidents by car type. There are mainly two types of car that are much higher frequency than other type: Sedan and Station Wagon/Sport Utility Vehicle. The frequency of these two type in 2020 are more than 25000. Other common types are Taxi, Pick-up Truck, and Box Truck. The frequency of these three types are more than 1000. Other types are Bus, Bike, Tractor Truck Diesel, and Motorcycle are also have a frequency higher than 500.
