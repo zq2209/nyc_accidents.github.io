@@ -422,25 +422,25 @@ accidents_cartype_bar =
   filter(obs &gt; 100) %&gt;%
   filter(!is.na(vehicle_type_code_1)) %&gt;% 
   filter(obs &gt; 500) %&gt;% 
-  mutate(vehicle_type_code_1 = fct_reorder(vehicle_type_code_1, obs)) %&gt;% 
-  ggplot(aes(x = vehicle_type_code_1, y = obs, fill = vehicle_type_code_1)) +
+  mutate(vehicle_type = fct_reorder(vehicle_type_code_1, obs)) %&gt;% 
+  ggplot(aes(x = vehicle_type, y = obs, fill = vehicle_type)) +
   geom_bar(stat = &quot;identity&quot;) + 
   theme_classic() + 
-  labs(title = &quot;Bar plot of No. of Accidents by car type&quot;, 
-       y = &quot;No of Accidents&quot;, 
-       x = &quot;Car type&quot;) +
+  labs(title = &quot;Number of Accidents by Car Type&quot;, 
+       y = &quot;Number of Accidents&quot;, 
+       x = &quot;Car Type&quot;) +
   geom_text(size = 3, aes(label = obs), position = position_dodge(width=0.9), vjust=-0.25) + 
   ylim(0, 45000)
 
 accidents_cartype_bar + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())</code></pre>
 <p><img src="car_types_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
 <p>The plot shows the frequency (&gt;500) of accidents by car type.
-There are mainly two types of car that are much higher frequency than
-other type: Sedan and Station Wagon/Sport Utility Vehicle. The frequency
-of these two type in 2020 are more than 25000. Other common types are
-Taxi, Pick-up Truck, and Box Truck. The frequency of these three types
-are more than 1000. Other types are Bus, Bike, Tractor Truck Diesel, and
-Motorcycle are also have a frequency higher than 500.</p>
+There are mainly two types of cars with much higher frequencies than
+other types: sedan and station wagon/sport utility vehicle. The
+frequencies of these two types in 2020 are more than 25000. Other common
+types are taxi, pick-up truck, and box truck. The frequencies of these
+three types are more than 1000. Other types are bus, bike, tractor truck
+diesel, and motorcycles also have a frequency higher than 500.</p>
 
 
 
