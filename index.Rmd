@@ -1,0 +1,74 @@
+---
+title: "Car Accidents in NYC"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+<img src="images/traffic.jpeg" style="width:100%">
+
+&nbsp;
+
+### Introduction
+
+Increasing car accidents has been a serious issue in New York City, which may cause serious threats to personal and property security. To reduce the number of car accidents, we will utilize the NYC car accident dataset in 2020 to analyze the factors contributing to accidents. Through data analysis, we will obtain the peak time period, concentrated areas, and main causes of accidents, aiming to effectively decrease the rate of car accidents taking place and further ensure personal safety.
+
+&nbsp;
+
+
+### Website Summary
+
+In the exploratory analyses section, you will find:
+
+- Exploration of frequency of car accidents
+
+- Analyses of car accidents over hour, day, and month
+
+- Investigation of accident casualty
+
+- Examination of car accidents by vehicle types
+
+- Association between weather and car accidents 
+
+
+Our statistical analyses section includes two parts: statistical test and regression analyses:
+
+- Anova Test - whether month and weekday are associated with car accidents
+
+- Chi-squared Test - whether the vehicle types proportion vary among boroughs; whether the accidents proportion for weekdays vary among boroughs
+
+- Proportion Test - whether proportions of car accidents are different across boroughs
+
+- Number of car accidents vs day or night(night = 1, day = 0) - whether there is an association between the number of accidents and the day or night of a day
+
+- Number of car accidents vs weekdays(weekends = 1, workdays = 0) - whether there is an association between the number of accidents and weekdays
+
+- Number of car accidents vs borough - whether there is an association between the number of accidents and different boroughs
+
+In Mapping tab, you will find:
+
+- Mapping of car accidents
+
+
+
+
+&nbsp;
+
+
+### Screencast
+
+
+
+### Collaborators
+
+Jiaoyang Li (jl6321)
+
+Jingyi Tian (jt3387)
+
+Anjing Liu (al4225)
+
+Zining Qi (zq2209)
+

@@ -1,0 +1,39 @@
+name: "Our Website"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: 'Exploratory Analyses'
+      menu:
+      - text: 'Car Accidents Frequency'
+        href: frequency.html
+      - text: 'Car Accidents over Time'
+        href: time.html
+      - text: 'Car Accidents by Car Type'
+        href: car_type.html
+      - text: 'Weather and Accidents'
+        href: weather.html
+      - text: 'Accidents Casualty'
+        href: casualty.html
+    - text: 'Statistical Analyses'
+      menu:
+      - text: "Statistical Tests"
+        href: statistical_test.html
+      - text: "Regression Analyses"
+        href: regression.html
+    - text: 'Mapping'
+      href: mapping.html
+    - text: 'Project Report'
+      href: final_report.html
+    - text: 'Screencast'
+      href: 
+    - text: 'References'
+      href: references.html
+    - icon: fa-github fa-lg
+      href: https://github.com/zq2209/nyc_accidents.github.io
+output:
+  html_document:
+    theme: yeti
+    toc : true
+    toc_float: true
+    code_folding: hide
