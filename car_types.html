@@ -348,7 +348,7 @@ div.tocify {
       <a href="time.html">Car Accidents over Time</a>
     </li>
     <li>
-      <a href="car_type.html">Car Accidents by Car Type</a>
+      <a href="car_types.html">Car Accidents by Car Type</a>
     </li>
     <li>
       <a href="weather.html">Weather and Accidents</a>
@@ -430,7 +430,7 @@ accidents_cartype_bar =
        y = &quot;No of Accidents&quot;, 
        x = &quot;Car type&quot;) +
   geom_text(size = 3, aes(label = obs), position = position_dodge(width=0.9), vjust=-0.25) + 
-  ylim(0, 50000)
+  ylim(0, 45000)
 
 accidents_cartype_bar + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())</code></pre>
 <p><img src="car_types_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
