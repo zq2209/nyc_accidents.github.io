@@ -1,0 +1,19 @@
+---
+title: "References"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+Here are some resources that we used for our project.   
+**Motivating Statistics**   
+[NYC Car Accidents Statistics](https://www.health.ny.gov/statistics/prevention/injury_prevention/traffic/county_of_residence.html)
+
+**Proportion Test Statistics**   
+[Population of the Borough of New York City](https://www.citypopulation.de/en/usa/newyorkcity/)
+
+**Data Resources**   
+[NYC Car Accidents](https://www.kaggle.com/code/aqsasadaf/nyc-rush-hour-accidents/data)
+[NYC Car Accidents and Weather Condition](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
