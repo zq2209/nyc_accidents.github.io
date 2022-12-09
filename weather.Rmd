@@ -29,7 +29,7 @@ We also investigated how weather conditions could make an impact on car accident
 ```{r, message=FALSE, warning=FALSE}
 accident_weather_table = accidents2 %>% 
   group_by(weather_condition) %>% 
-  summarize(obs = n()) %>% 
+  dplyr::summarize(obs = n()) %>% 
   arrange(desc(obs))
 
 accident_weather_bar = accident_weather_table %>% 
@@ -79,7 +79,7 @@ ggplot(accidents2, aes(x = wind_speed_mph))+
 
 severity = accidents2 %>% 
   group_by(severity) %>% 
-  summarize(obs = n()) %>% 
+  dplyr::summarize(obs = n()) %>% 
   arrange(desc(obs))
 
 ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 

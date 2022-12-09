@@ -348,7 +348,7 @@ div.tocify {
       <a href="time.html">Car Accidents over Time</a>
     </li>
     <li>
-      <a href="car_type.html">Car Accidents by Car Type</a>
+      <a href="car_types.html">Car Accidents by Car Type</a>
     </li>
     <li>
       <a href="weather.html">Weather and Accidents</a>
@@ -420,7 +420,7 @@ class="section level2">
 <h2>Bar chart of accidents in different weather condition</h2>
 <pre class="r"><code>accident_weather_table = accidents2 %&gt;% 
   group_by(weather_condition) %&gt;% 
-  summarize(obs = n()) %&gt;% 
+  dplyr::summarize(obs = n()) %&gt;% 
   arrange(desc(obs))
 
 accident_weather_bar = accident_weather_table %&gt;% 
@@ -477,7 +477,7 @@ frequency of wind speed larger than 12.5 is less than 25.</p>
 <p><img src="weather_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <pre class="r"><code>severity = accidents2 %&gt;% 
   group_by(severity) %&gt;% 
-  summarize(obs = n()) %&gt;% 
+  dplyr::summarize(obs = n()) %&gt;% 
   arrange(desc(obs))
 
 ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
