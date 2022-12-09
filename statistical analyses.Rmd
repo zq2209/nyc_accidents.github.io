@@ -164,7 +164,7 @@ fit_accidents =
   accidents %>% 
   mutate(month = as.factor(month)) %>% 
   group_by(month, weekday, day) %>% 
-  summarize(num_accidents = n()) 
+  dplyr::summarize(num_accidents = n()) 
 fit_accidents_month = lm(num_accidents ~ month, data = fit_accidents)  
 anova(fit_accidents_month) %>% 
   knitr::kable(caption = "One way anova of number of accidents and month", caption.pos = "top")
