@@ -96,7 +96,8 @@ ggplot(aes(x = borough, y = number_of_casualties, fill = types_of_casualties)) +
     fill = "Types") +
   theme_bw(base_size = 12) +  
   theme(axis.text = element_text(colour = 'black'),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5)) +
+   ylim(0, 6500)
 injured_killed_bar_plot
 ```
 
@@ -132,7 +133,8 @@ casualties_table %>%
     y = "Number of people injured in each borough") +
   theme_bw(base_size = 12) +  
   theme(axis.text = element_text(colour = 'black'),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5)) +
+  ylim(0, 6500)
 injuries_borough_plot
 ```
 
@@ -155,7 +157,8 @@ casualties_table %>%
     y = "Number of people killed in each borough") +
   theme_bw(base_size = 12) +  
   theme(axis.text = element_text(colour = 'black'),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5)) +
+  ylim(0, 28)
 killed_borough_plot
 ```
 
