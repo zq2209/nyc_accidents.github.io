@@ -1,0 +1,100 @@
+---
+title: "Weather and Accidents"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+<br>
+
+We also investigated how weather conditions could make an impact on car accidents. 
+
+<br>
+
+## Bar chart of accidents in different weather condition
+
+```{r, message=FALSE, warning=FALSE}
+accident_weather_table = accidents2 %>% 
+  group_by(weather_condition) %>% 
+  summarize(obs = n()) %>% 
+  arrange(desc(obs))
+
+accident_weather_bar = accident_weather_table %>% 
+  drop_na() %>%  
+  filter(obs > 10) %>% 
+  mutate(weather_condition = fct_reorder(weather_condition, obs)) %>% 
+  ggplot(aes(x = weather_condition, y = obs, fill = weather_condition)) +
+  geom_bar(stat = "identity") + 
+  theme_classic() + 
+  labs(title = "Bar plot of No. of Accidents by weather condition", 
+       y = "No of Accidents", 
+       x = "Weather Condition") 
+
+accident_weather_bar + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+The plot shows the frequency of accidents by weather. The most common weather condition of accidents id Fair, which actually is a little away from common sense. There are two possible reasons. The first one is there are much more days of fair than other weather in 2020 of New York. So it is reasonable that the frequency in fair weather is higher. The other reason is that during fair weather, people tends to behave less caution. Thus the probability of accidents increases. This question worth further research, which has been list in our group's further research plan. Other commonn types of weather are Cloudy, Mostly Cloudly, Light Rain, Partly Cloudly, Rain and Fog.
+
+<br>
+
+## Total accidents by wind-speed
+
+```{r, message=FALSE, warning=FALSE}
+accidents_windspeed = accidents2 %>% 
+  ggplot(aes(x = wind_speed_mph)) +
+  geom_histogram(color = "darkblue", fill = "lightblue") +
+  labs(
+    title = "Histogram of No. of Accidents by wind speed", 
+       x = "Wind speed"
+  )
+accidents_windspeed
+
+ggplot(accidents2, aes(x=wind_speed_mph)) + 
+  geom_density()
+```
+
+The plot shows the frequency of accidents by wind speed. As shown in plot, the distribution of frequency is right-skewed. The most common wind speed is from 0 to 7.5. The frequency of this interval is higher than 150. From 7.5 to 12.5, the frequency is fairly common. And the frequency of wind speed larger than 12.5 is less than 25. 
+
+<br>
+
+## Severity and wind speed
+
+```{r, message=FALSE, warning=FALSE}
+ggplot(accidents2, aes(x = wind_speed_mph))+
+  geom_boxplot(color="black", fill="white")+
+  facet_grid(severity ~ .)
+
+severity = accidents2 %>% 
+  group_by(severity) %>% 
+  summarize(obs = n()) %>% 
+  arrange(desc(obs))
+
+ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
+  geom_violin(trim = FALSE, aes(fill = severity)) +
+  theme_bw()
+
+ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
+  geom_violin(trim = FALSE, aes(fill = severity)) +
+  theme_bw() +
+  coord_flip() +
+  labs(
+    title = "Violin of Wind speed vs Severity", 
+       y = "Wind Speed", 
+       x = "Severity Level"
+  )
+```
+
+This violin plot shows the range of wind speed in each severity level. The most common severity is severity 2. For severity 2, the range of wind speed is from 0 and 20. In severity 3, the range is from 8 to 12.5. The range of wind speed of severity 4 is from 9 to 11.25. In severity 1, there are only 4 observations, so there is only a line for severity 1.
