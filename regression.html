@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Analysis on NYC Accidents</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Exploratory Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="frequency.html">Car Accidents Frequency</a>
+    </li>
+    <li>
+      <a href="time.html">Car Accidents over Time</a>
+    </li>
+    <li>
+      <a href="car_type.html">Car Accidents by Car Type</a>
+    </li>
+    <li>
+      <a href="weather.html">Weather and Accidents</a>
+    </li>
+    <li>
+      <a href="casualty.html">Accidents Casualty</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Statistical Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="statistical_test.html">Statistical Tests</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analyses</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="mapping.html">Mapping</a>
+</li>
+<li>
+  <a href="final_report.html">Project Report</a>
+</li>
+<li class="dropdown-header">Screencast</li>
+<li>
+  <a href="references.html">References</a>
+</li>
+<li>
+  <a href="https://github.com/zq2209/nyc_accidents.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Regression Analysis on NYC Accidents</h1>
+
+</div>
+
+
+<div id="regression-analysis-on-nyc-accidents" class="section level1">
+<h1>Regression Analysis on NYC Accidents</h1>
+<p>From previous EDA steps, we recognize that the number of car
+accidents are associated to many factors, such as the time in the day of
+accidents, borough, weather condition, and whether the accidents happend
+during weekday or weekend. In this section, we will examine all these
+four factos.</p>
+<div id="regression-of-accidents-against-daynight"
+class="section level2">
+<h2>Regression of accidents against day/night</h2>
+<p>First, we want to examine does the time in the day of
+accidents(day/night) will relate to the number of accidents.</p>
+<p>We divide a day into two parts: day and night, to see whether this a
+linear relationship between car accidents number and day or night time
+of a day. We set 7:00 am to 19:00 pm as day, and 19:00 pm to 7:00 am as
+night. The module is <span class="math inline">\(E(Y) = \beta_0 +
+\beta_1I(day\_night = night)\)</span>, and the hypothesis is: <span
+class="math inline">\(H_0: \beta_0 = 0\)</span><br />
+<span class="math inline">\(H_1: \beta_0 ≠ 0\)</span></p>
+<pre class="r"><code>reg_day_night_data = accidents1 %&gt;%
+  mutate(hour = as.numeric(hour),
+         day_night = ifelse(hour %in% c(7,8,9,10,11,12,13,14,15,16,17,18), &quot;day&quot;, &quot;night&quot;)) %&gt;%
+  group_by(crash_date, day_night) %&gt;% 
+  dplyr::summarize(n_obs = n())</code></pre>
+<pre class="r"><code>reg_day_night = lm(n_obs ~ day_night, reg_day_night_data)
+summary(reg_day_night)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n_obs ~ day_night, data = reg_day_night_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -140.93  -52.74   -9.99   30.65  377.07 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     194.934      4.884   39.91   &lt;2e-16 ***
+## day_nightnight  -80.442      6.907  -11.65   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 75.98 on 482 degrees of freedom
+## Multiple R-squared:  0.2196, Adjusted R-squared:  0.218 
+## F-statistic: 135.6 on 1 and 482 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From the regression result, we can see that the p_value is less than
+0.01, so we have enough evidence to say that the there is a linear
+association between the number of accidents and the variable
+<code>day_night</code>. The regression line is:</p>
+<p><span class="math display">\[Y = 137.669 - 72.281I(day\_night =
+night)\]</span> Therefore, there are expected 72 more accidents in night
+than in day time. More cars in streets in day time may contributes to
+this result, as car accident is more likely to happen in heavy
+traffic.</p>
+</div>
+<div id="regression-of-accidents-against-borough"
+class="section level2">
+<h2>Regression of accidents against borough</h2>
+<p>Second, we will figure out weather there is a linear relationship
+between borough and the number of accidents.</p>
+<pre class="r"><code>reg_borough_data = accidents1 %&gt;% 
+  filter(borough %in% c(&quot;Bronx&quot;, &quot;Brooklyn&quot;, &quot;Manhattan&quot;, &quot;Queens&quot;, &quot;Staten Island&quot;)) %&gt;% 
+  group_by(crash_date) %&gt;% 
+  count(borough)</code></pre>
+<pre class="r"><code>reg_borough = lm(n ~ borough, data = reg_borough_data)
+summary(reg_borough)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n ~ borough, data = reg_borough_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -52.864 -12.913  -1.384   8.124 124.079 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            38.913      1.352  28.791  &lt; 2e-16 ***
+## boroughBrooklyn        30.950      1.911  16.192  &lt; 2e-16 ***
+## boroughManhattan       -8.529      1.911  -4.462 8.87e-06 ***
+## boroughQueens          19.008      1.911   9.945  &lt; 2e-16 ***
+## boroughStaten Island  -32.938      1.911 -17.232  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 21.03 on 1205 degrees of freedom
+## Multiple R-squared:  0.528,  Adjusted R-squared:  0.5264 
+## F-statistic:   337 on 4 and 1205 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>As the p-value of coeeficients is less than predetermined
+significance level of 0.05, we have evidence to reject the null
+hypothesis that the number of accidents are the same in different
+borough. The regression model is: <span class="math display">\[Y =
+38.913 + 30.950I(borough = Brooklyn) - 8.529I(borough = Manhattan) +
+19.008I(borough = Queens) - 32.938I(borough = Staten
+Island)\]</span></p>
+<p>From the summary of regression result, the reference borough is
+Bronx. The average number of accidents in Bronx is 38.91. In Brooklyn,
+the average of number of accidents is 30.95 higher than Bronx. The
+average of number of accidents in Manhattan is 8.53 lower than Bronx.
+For Queens, the average of number of accidents is 19 less than Bronx.
+And the average of number of accidents in State Island is 32.94 lower
+than Bronx. Brooklyn has the highest average of number of accidents and
+State Island has the least average of number of accidents.</p>
+</div>
+<div id="regression-of-accidents-against-workdayweekend"
+class="section level2">
+<h2>Regression of accidents against workday/weekend</h2>
+<p>Next, we want to examine weather workdays/weekends relates to the
+number of accidents.</p>
+<p>To clean to data, we create a new variable <code>weekdays</code>,
+which shows the type of weekdays. It is a categorical variable so we
+take workdays as reference category and weekends as indicator variable.
+To test whether there is a linear association between the number of car
+accidents and workdays, we perform the hypothesis test and set α =
+0.1.</p>
+<pre class="r"><code>reg_workdays_weekends_data = 
+  accidents1 %&gt;% 
+  filter(!is.na(borough)) %&gt;%
+  mutate(weekdays_type = if_else(weekday %in% c(&quot;Saturday&quot;, &quot;Sunday&quot;), &quot;Weekends&quot;, &quot;Workdays&quot;)) %&gt;%
+  dplyr::select(-borough) %&gt;%
+  group_by(crash_date, weekdays_type) %&gt;%
+  count(crash_date, weekdays_type) %&gt;%
+  mutate(weekdays_type = as.factor(weekdays_type))</code></pre>
+<pre class="r"><code>reg_workdays_weekends = lm(n ~ weekdays_type, data = reg_workdays_weekends_data)
+summary(reg_workdays_weekends)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n ~ weekdays_type, data = reg_workdays_weekends_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -145.95  -68.95  -11.45   69.22  327.22 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            209.948      6.639  31.623   &lt;2e-16 ***
+## weekdays_typeWeekends  -24.165     12.433  -1.944   0.0531 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 87.32 on 240 degrees of freedom
+## Multiple R-squared:  0.0155, Adjusted R-squared:  0.01139 
+## F-statistic: 3.778 on 1 and 240 DF,  p-value: 0.05311</code></pre>
+<p>According to the results, p-value=0.05311 &lt; 0.1, so we can reject
+the null and conclude that we are 90% confident that there is a
+significant linear association between the number of the car accidents
+and weekdays. The regression line is: <span class="math display">\[Y =
+209.948 - 24.165I(workday/weekend = weekends)\]</span> In weekends, the
+average number of car accidents will decrease by approximately 24.</p>
+</div>
+<div id="regression-of-accidents-against-weather-condition"
+class="section level2">
+<h2>Regression of accidents against weather condition</h2>
+<p>Finally, we want to explore the association between number of
+accidents and weather conditions: visibility, temperature, and
+pressure.</p>
+<p>This is the correlation plot of number of accidents weather
+conditions.</p>
+<pre class="r"><code>chart.Correlation(as.matrix(accidents2[, c(2, 25:29, 31:32)]), histogram=TRUE, pch=19)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p>From the plot, there are potential linear relationship between
+sevesity and weather conditions. And we include interaction of
+temperature*pressure.</p>
+<pre class="r"><code>reg_weather = lm(severity ~ visibility_mi + temperature_f * pressure_in, data = accidents2) 
+summary(reg_weather)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = severity ~ visibility_mi + temperature_f * pressure_in, 
+##     data = accidents2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.6245 -0.3832 -0.2667  0.3783  1.8275 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)               -18.170686   8.219341  -2.211 0.027210 *  
+## visibility_mi              -0.015607   0.007020  -2.223 0.026363 *  
+## temperature_f               0.554606   0.156171   3.551 0.000396 ***
+## pressure_in                 0.674596   0.274756   2.455 0.014195 *  
+## temperature_f:pressure_in  -0.018231   0.005216  -3.495 0.000488 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.6405 on 1454 degrees of freedom
+##   (30 observations deleted due to missingness)
+## Multiple R-squared:  0.05344,    Adjusted R-squared:  0.05084 
+## F-statistic: 20.52 on 4 and 1454 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Based on the summary output of the model, it is indicated that the
+main effect of temperature and its interaction with pressure have the
+most significance. The main effects of visibility and pressure are also
+significant with p-values less than the predetermined level of 0.05. The
+regression line is: <span class="math display">\[Y = -18.170 -
+0.016*visibility + 0.555*temperature + 0.675*pressure -
+0.018*temperature*pressure\]</span></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

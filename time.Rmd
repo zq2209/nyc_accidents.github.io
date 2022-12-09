@@ -1,0 +1,129 @@
+---
+title: "Time"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(tidyverse)
+library(ggridges)
+library(patchwork)
+library(lubridate)
+library(rvest)
+library(Hmisc)
+```
+
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+### Car Accident over Time
+
+In this section, we'll focus on the trend of car accidents over time. We will analyse the pattern that number of car accidents follows through hour, day, and month among five boroughs.
+
+### Total accidents over month by borough
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>% 
+  separate(crash_date, into = c('year', 'month', 'day'), sep = "-") %>% 
+  mutate(
+    year = as.numeric(year),
+    month = as.numeric(month),
+    day = as.numeric(day)
+    ) %>% 
+  mutate(month = month.name[month],
+         month = fct_relevel(month, c("January", "February", "March", "April",
+                                      "May", "June", "July", "August"))) %>% 
+  relocate(month) %>% 
+  group_by(borough, month) %>% 
+  dplyr::summarize(n_obs = n()) %>% 
+  ggplot(aes(x = month, y = n_obs, group = 1, color = borough)) +
+  geom_point() + 
+  geom_line() + 
+  labs(
+    title = "Total Accident Numbers over Month by Borough",
+    x = "Month",
+    y = "Number of Accident in Each Month"
+    ) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 5) ) +
+  facet_wrap(~ borough, nrow = 1)
+```
+
+- This graph shows the total number of accidents in 5 boroughs from January to August in 2020. We can see that in January, February, and March, the accident numbers in these boroughs are much higher than in other months, and the accident numbers in April is the lowest for 5 boroughs. Also, Brooklyn has the largest accident number and Saten Island has the smallest accident number among all boroughs in every month in New York.
+
+### Total accidents over weekday 
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>% 
+  mutate(crash_date = as.Date(crash_date),
+         weekday = weekdays(crash_date)) %>% 
+  mutate(weekday = as.factor(weekday),
+         weekday = fct_relevel(weekday, "Monday", "Tuesday", "Wednesday", "Thursday",
+                               "Friday", "Saturday", "Sunday")) %>%
+  relocate(weekday) %>%
+  group_by(borough, weekday) %>%
+  dplyr::summarize(n_obs = n()) %>%
+  ggplot(aes(x = weekday, y = n_obs, group = 1, color = borough)) + 
+  geom_point() + 
+  geom_line() + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1) ) + 
+  facet_wrap(~ borough, nrow = 1) +
+  labs(
+    title = "Total Accident Number over Weekday by Borough",
+    x = "Weekday",
+    y = "Number of Accident",
+    color = "Borough"
+    )
+```
+
+- This plot shows the total accident number over weekday by borough. We can see that 5 boroughs have a similar trend, and the accident number is the largest on Friday and lowest on Sunday. Brooklyn also has the largest daily accident number and Staten Island has the lowest.
+
+### Total accidents over hour
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>%
+  separate(crash_time, into = c('hour', 'minute', 'second'), sep = ":") %>% 
+  mutate(hour = as.numeric(hour)) %>% 
+  group_by(borough, hour) %>%
+  dplyr::summarize(n_obs = n()) %>%
+  ggplot(aes(x = hour, y = n_obs, color = borough)) + 
+  geom_point() + 
+  geom_line() +
+  labs(
+    title = "Total Number of Accident During 24 Hours of a Day by Borough",
+    x = "Hour",
+    y = "Number of Accident"
+    ) +
+  facet_wrap(~ borough, nrow = 2)
+```
+
+- This plot shows the total accident number during 24 hours of a day by borough. We can see that 5 boroughs have a similar daily trend. The number of accidents is relatively low from 0:00 am to 6:00 am, then increases and keep high in 8:00 am to 17:00 pm, and drops until 24:00 pm.
+
+### Total accidents in different part of day by weekdays
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>%
+  group_by(hour, weekday) %>%
+  count(hour) %>%
+  mutate(weekday = as.factor(weekday),
+         weekday = fct_relevel(weekday, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ),
+         hour = as.numeric(hour)) %>%
+  ggplot(aes(x = hour, y = n, group = 1, color = hour)) + 
+  geom_point() + 
+  theme(axis.text.x = element_text(hjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(
+    title = "Number of accidents in different parts of day by weekdays",
+    x = "Hour",
+    y = "Number of accidents") +
+  scale_x_continuous(limits = c(0, 23)) +
+  facet_wrap(~ weekday, nrow = 2) 
+```
+
+- By dividing the number of car accidents by weekdays and hours, we can find that the number of car accidents tends to increase and then decrease during the day. Among them, 13:00 to 19:00 is the peak period of car accidents. During the week, the number of crashes is higher on weekdays than on weekends, and the peak of crashes is higher on weekdays. The reason for the above may be that people are more likely to be involved in crashes on weekdays between 13:00 and 19:00, when they are commuting in the rush hours. On weekends, when people spend more time at home, so the number of car accidents is relatively lower.
