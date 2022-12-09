@@ -53,7 +53,7 @@ In Mapping tab, you will find:
 
 - Mapping of car accidents
 
-
+- Mapping of number of injuries in each accident
 
 
 &nbsp;
