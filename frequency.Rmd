@@ -10,29 +10,103 @@ output:
 
 ```{r setup, include=FALSE, echo = FALSE}
 library(tidyverse)
-library(httr)
 library(lubridate)
-library(plotly)
+```
 
-knitr::opts_chunk$set(
-  fig.width = 6,
-  fig.asp = .7,
-  out.width = "90%"
-)
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
-options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
 ```
 
 ### Accident frequency
 
-#### 10 most common contributing factors of car accidents
+First, we will have a overview of the relevant factors about car accidents using bar chart.
 
-```{r}
+### 10 most common contributing factors of car accidents
 
+```{r, message=FALSE, warning=FALSE}
+contr_factors = 
+  accidents1 %>% 
+  count(contributing_factor_vehicle_1) %>% 
+  mutate(
+    contributing_factor_vehicle_1 = fct_reorder(contributing_factor_vehicle_1, n),
+    ranking = min_rank(desc(n))
+  ) %>% 
+  filter(ranking <= 10) %>% 
+  arrange(n) 
+
+contr_factors %>% 
+  ggplot(aes(x = contributing_factor_vehicle_1, y = n, fill = contributing_factor_vehicle_1)) + 
+  geom_col() +
+  labs(title = "10 Most Common Contributing Factors of Car Accidents",
+       x = "Contributing Factors",
+       y = "Number of Car Accidents") + 
+  coord_flip() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) 
 ```
 
+- We first tried to find out which factors are the most common in leading to car accidents. Thus, we constructed a bar plot illustrating the top 10 most common contributing factors of car accidents. Besides those accidents that do not have reasons specified, drivers' inattention and distraction are shown to be the top common factor resulting in car accidents. Other common reasons include following the front car too closely, failure to yield right-of-way, and so forth. 
+
+### Top 10 streets of accidents 
+
+```{r, message=FALSE, warning=FALSE}
+streets = 
+  accidents1 %>% 
+  filter(on_street_name != "NA") %>% 
+  count(on_street_name) %>% 
+  mutate(
+    on_street_name = fct_reorder(on_street_name, n),
+    ranking = min_rank(desc(n))
+  ) %>% 
+  filter(ranking <= 10) %>% 
+  arrange(n) 
+
+streets %>% 
+  ggplot(aes(x = on_street_name, y = n, fill = on_street_name)) + 
+  geom_col() +
+  labs(title = "Top 10 Streets of Car Accidents",
+       x = "Street Name",
+       y = "Number of Car Accidents") + 
+  coord_flip() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) 
+```
+
+- We then explored the streets where most car accidents have taken place. The bar graph indicates that Belt Parkway has the most car accidents. Besides, Long Island Expressway, Brooklyn Queens Expressway, and FDR Drive also have a relatively great amount of accidents occurred. 
+
+### Number of accidents in boroughs by month 
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>% 
+  filter(borough != "NA") %>% 
+  group_by(borough) %>%
+  count(month) %>% 
+  mutate(month = month.abb[month],
+         month = fct_relevel(month, c("Jan", "Feb", "Mar", "Apr","May","Jun", "Jul", "Aug"))) %>% 
+  ggplot(aes(x = month, y = n, fill = borough)) +
+  geom_bar(stat = "identity",
+           position = "dodge") +
+  labs(
+    title = "Number of Car Accidents in Boroughs Over Month",
+    x = "Month",
+    y = "Number of Car Accidents",
+    fill = "Borough") + 
+  theme(plot.title = element_text(hjust = 0.5)) 
+```
+
+- We also investigated the overall pattern of car accidents occurred in different boroughs over month. There tend to be most car accidents in January and February while least car accidents took place in April. Overall, the number of car accidents decreases from January to April and increases from April to July. Brooklyn seems to have the most car accidents while least car accidents occurred in Staten Island over the 8 months in New York City. 
+
+### Overall number of accidents by day 
+
+```{r, message=FALSE, warning=FALSE}
+accidents1 %>% 
+  group_by(crash_date) %>% 
+  count(crash_date) %>% 
+  ggplot(aes(x = crash_date, y = n, color = n)) + 
+  geom_col() + 
+  labs(title = "Overall Number of Accidents by Day", 
+       x = "Day", 
+       y = "Number of Car Accidents") + 
+  theme(legend.position = "right", plot.title = element_text(hjust = 0.5)) 
+```
+
+- A bar plot of number of car accidents by day over the 8 months was also constructed. Most car accidents took place from January to March while April has the least accidents. This graph also supports the pattern demonstrated by the plot above. 
