@@ -10,7 +10,7 @@ navbar:
       - text: 'Car Accidents over Time'
         href: time.html
       - text: 'Car Accidents by Car Type'
-        href: car_type.html
+        href: car_types.html
       - text: 'Weather and Accidents'
         href: weather.html
       - text: 'Accidents Casualty'
