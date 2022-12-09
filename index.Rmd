@@ -14,7 +14,10 @@ output:
 
 ### Introduction
 
-Increasing car accidents has been a serious issue in New York City, which may cause serious threats to personal and property security. To reduce the number of car accidents, we will utilize the NYC car accident dataset in 2020 to analyze the factors contributing to accidents. Through data analysis, we will obtain the peak time period, concentrated areas, and main causes of accidents, aiming to effectively decrease the rate of car accidents taking place and further ensure personal safety.
+During the first couple of months in New York, one of our group members witnessed a car accident which causing a huge traffic jam on her way to class. This experience motivates us to do some research and investigate car accidents in New York. According to the Department of Health in New York, there were 1,098 deaths each year due to unintentional motor vehicle traffic-related injuries and 12,093 hospitalizations each year due to motor vehicle traffic-related injuries. 
+
+Therefore, we are interested in exploring some factors related to car accidents. Through data analysis, we will obtain the peak time period, concentrated areas, and main causes of accidents, aiming to effectively decrease the rate of car accidents taking place and further ensure personal safety.
+
 
 &nbsp;
 
