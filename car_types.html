@@ -411,7 +411,11 @@ div.tocify {
 </div>
 
 
-<p>We then explored the number of car accidents by vehicle types.</p>
+<p>Then, we want to know how types of cars are associated with the
+number of accidents. A bar plot of the number of accidents by car type
+clearly represents the relationship.</p>
+<div id="number-of-accidents-by-car-type" class="section level3">
+<h3>Number of Accidents by Car Type</h3>
 <pre class="r"><code>accidents2 = accidents1 %&gt;% 
   group_by(vehicle_type_code_1) %&gt;% 
   summarize(obs = n()) %&gt;% 
@@ -441,6 +445,7 @@ frequencies of these two types in 2020 are more than 25000. Other common
 types are taxi, pick-up truck, and box truck. The frequencies of these
 three types are more than 1000. Other types are bus, bike, tractor truck
 diesel, and motorcycles also have a frequency higher than 500.</p>
+</div>
 
 
 
