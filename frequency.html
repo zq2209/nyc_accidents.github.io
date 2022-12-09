@@ -412,13 +412,13 @@ div.tocify {
 
 
 <div id="accident-frequency" class="section level3">
-<h3>Accident frequency</h3>
-<p>First, we will have a overview of the relevant factors about car
-accidents using bar chart.</p>
+<h3>Accident Frequency</h3>
+<p>First, we will focus on factors that relate to the number of
+accidents. We use bar charts to illustrate the number of accidents by
+contributing factors, street, borough and month, and day.</p>
 </div>
-<div id="most-common-contributing-factors-of-car-accidents"
-class="section level3">
-<h3>10 most common contributing factors of car accidents</h3>
+<div id="most-common-contributing-factors" class="section level3">
+<h3>10 Most Common Contributing Factors</h3>
 <pre class="r"><code>contr_factors = 
   accidents1 %&gt;% 
   count(contributing_factor_vehicle_1) %&gt;% 
@@ -436,18 +436,18 @@ contr_factors %&gt;%
        x = &quot;Contributing Factors&quot;,
        y = &quot;Number of Car Accidents&quot;) + 
   coord_flip() +
-  theme(legend.position = &quot;none&quot;, plot.title = element_text(hjust = 0.5)) </code></pre>
+  theme(legend.position = &quot;none&quot;, plot.title = element_text(hjust = 1)) </code></pre>
 <p><img src="frequency_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
-<p>We first tried to find out which factors are the most common in
-leading to car accidents. Thus, we constructed a bar plot illustrating
-the top 10 most common contributing factors of car accidents. Besides
-those accidents that do not have reasons specified, drivers’ inattention
-and distraction are shown to be the top common factor resulting in car
-accidents. Other common reasons include following the front car too
-closely, failure to yield right-of-way, and so forth.</p>
+<p>We first tried to figure out which factors are the leading factors of
+car accidents. We constructed a bar plot illustrating the top 10 most
+common contributing factors of car accidents. Except accidents without
+specified reasons, drivers’ inattention and distraction are shown to be
+the top common factor resulting in car accidents. Other common reasons
+include following the front car too closely, failure to yield
+right-of-way, and so forth.</p>
 </div>
 <div id="top-10-streets-of-accidents" class="section level3">
-<h3>Top 10 streets of accidents</h3>
+<h3>Top 10 Streets of Accidents</h3>
 <pre class="r"><code>streets = 
   accidents1 %&gt;% 
   filter(on_street_name != &quot;NA&quot;) %&gt;% 
@@ -468,15 +468,14 @@ streets %&gt;%
   coord_flip() +
   theme(legend.position = &quot;none&quot;, plot.title = element_text(hjust = 0.5)) </code></pre>
 <p><img src="frequency_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<p>We then explored the streets where most car accidents have taken
+<p>Then, we explored the streets where most car accidents have taken
 place. The bar graph indicates that Belt Parkway has the most car
-accidents. Besides, Long Island Expressway, Brooklyn Queens Expressway,
-and FDR Drive also have a relatively great amount of accidents
-occurred.</p>
+accidents. Long Island Expressway, Brooklyn Queens Expressway, and FDR
+Drive also have a relatively great amount of accidents.</p>
 </div>
 <div id="number-of-accidents-in-boroughs-by-month"
 class="section level3">
-<h3>Number of accidents in boroughs by month</h3>
+<h3>Number of Accidents in Boroughs by Month</h3>
 <pre class="r"><code>accidents1 %&gt;% 
   filter(borough != &quot;NA&quot;) %&gt;% 
   group_by(borough) %&gt;%
@@ -493,8 +492,8 @@ class="section level3">
     fill = &quot;Borough&quot;) + 
   theme(plot.title = element_text(hjust = 0.5)) </code></pre>
 <p><img src="frequency_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<p>We also investigated the overall pattern of car accidents occurred in
-different boroughs over month. There tend to be most car accidents in
+<p>We also investigated the overall pattern of car accidents in
+different boroughs over months. There tend to be most car accidents in
 January and February while least car accidents took place in April.
 Overall, the number of car accidents decreases from January to April and
 increases from April to July. Brooklyn seems to have the most car
@@ -502,7 +501,7 @@ accidents while least car accidents occurred in Staten Island over the 8
 months in New York City.</p>
 </div>
 <div id="overall-number-of-accidents-by-day" class="section level3">
-<h3>Overall number of accidents by day</h3>
+<h3>Overall Number of Accidents by Day</h3>
 <pre class="r"><code>accidents1 %&gt;% 
   group_by(crash_date) %&gt;% 
   count(crash_date) %&gt;% 
@@ -513,10 +512,10 @@ months in New York City.</p>
        y = &quot;Number of Car Accidents&quot;) + 
   theme(legend.position = &quot;right&quot;, plot.title = element_text(hjust = 0.5)) </code></pre>
 <p><img src="frequency_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<p>A bar plot of number of car accidents by day over the 8 months was
-also constructed. Most car accidents took place from January to March
-while April has the least accidents. This graph also supports the
-pattern demonstrated by the plot above.</p>
+<p>This bar plot represents the number of car accidents each day over
+the 8 months. Most car accidents took place from January to March. The
+month with the least number of car accidents is April. This graph also
+matches the pattern demonstrated by the previous plot.</p>
 </div>
 
 
