@@ -1,0 +1,118 @@
+---
+title: "Regression Analysis on NYC Accidents"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(httr)
+library(tidyverse)
+library(lubridate)
+library(patchwork)
+library(Hmisc)
+library(ggridges)
+library("PerformanceAnalytics")
+
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+# Regression Analysis on NYC Accidents
+From previous EDA steps, we recognize that the number of car accidents are associated to many factors, such as the time in the day of accidents, borough, weather condition, and whether the accidents happend during weekday or weekend. In this section, we will examine all these four factos.
+
+## Regression of accidents against day/night  
+First, we want to examine does the time in the day of accidents(day/night) will relate to the number of accidents. 
+
+We divide a day into two parts: day and night, to see whether this a linear relationship between car accidents number and day or night time of a day. We set 7:00 am to 19:00 pm as day, and 19:00 pm to 7:00 am as night. The module is $E(Y) = \beta_0 + \beta_1I(day\_night = night)$, and the hypothesis is: 
+$H_0: \beta_0 = 0$   
+$H_1: \beta_0 ≠ 0$
+```{r, message = FALSE, warning=FALSE}
+reg_day_night_data = accidents1 %>%
+  mutate(hour = as.numeric(hour),
+         day_night = ifelse(hour %in% c(7,8,9,10,11,12,13,14,15,16,17,18), "day", "night")) %>%
+  group_by(crash_date, day_night) %>% 
+  dplyr::summarize(n_obs = n())
+```
+
+```{r, message = FALSE, warning=FALSE}
+reg_day_night = lm(n_obs ~ day_night, reg_day_night_data)
+summary(reg_day_night)
+```
+
+From the regression result, we can see that the p_value is less than 0.01, so we have enough evidence to say that the there is a linear association between the number of accidents and the variable `day_night`. The regression line is:
+
+$$Y = 137.669 - 72.281I(day\_night = night)$$
+Therefore, there are expected 72 more accidents in night than in day time. More cars in streets in day time may contributes to this result, as car accident is more likely to happen in heavy traffic.
+
+## Regression of accidents against borough 
+Second, we will figure out weather there is a linear relationship between borough and the number of accidents.
+```{r, message = FALSE, warning=FALSE}
+reg_borough_data = accidents1 %>% 
+  filter(borough %in% c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island")) %>% 
+  group_by(crash_date) %>% 
+  count(borough)
+```
+
+```{r, message = FALSE, warning=FALSE}
+reg_borough = lm(n ~ borough, data = reg_borough_data)
+summary(reg_borough)
+```
+
+As the p-value of coeeficients is less than predetermined significance level of 0.05, we have evidence to reject the null hypothesis that the number of accidents are the same in different borough. The regression model is:
+$$Y = 38.913 + 30.950I(borough = Brooklyn) - 8.529I(borough = Manhattan) + 19.008I(borough = Queens) - 32.938I(borough = Staten Island)$$
+
+From the summary of regression result, the reference borough is Bronx. The average number of accidents in Bronx is 38.91. In Brooklyn, the average of number of accidents is 30.95 higher than Bronx. The average of number of accidents in Manhattan is 8.53 lower than Bronx. For Queens, the average of number of accidents is 19 less than Bronx. And the average of number of accidents in State Island is 32.94 lower than Bronx. Brooklyn has the highest average of number of accidents and State Island has the least average of number of accidents. 
+
+## Regression of accidents against workday/weekend
+Next, we want to examine weather workdays/weekends relates to the number of accidents.
+
+To clean to data, we create a new variable `weekdays`, which shows the type of weekdays. It is a categorical variable so we take workdays as reference category and weekends as indicator variable. To test whether there is a linear association between the number of car accidents and workdays, we perform the hypothesis test and set α = 0.1.
+```{r, message = FALSE, warning=FALSE}
+reg_workdays_weekends_data = 
+  accidents1 %>% 
+  filter(!is.na(borough)) %>%
+  mutate(weekdays_type = if_else(weekday %in% c("Saturday", "Sunday"), "Weekends", "Workdays")) %>%
+  dplyr::select(-borough) %>%
+  group_by(crash_date, weekdays_type) %>%
+  count(crash_date, weekdays_type) %>%
+  mutate(weekdays_type = as.factor(weekdays_type))
+```
+
+```{r, message = FALSE, warning=FALSE}
+reg_workdays_weekends = lm(n ~ weekdays_type, data = reg_workdays_weekends_data)
+summary(reg_workdays_weekends)
+```
+
+According to the results, p-value=0.05311 < 0.1, so we can reject the null and conclude that we are 90% confident that there is a significant linear association between the number of the car accidents and weekdays. The regression line is:
+$$Y = 209.948 - 24.165I(workday/weekend = weekends)$$
+In weekends, the average number of car accidents will decrease by approximately 24.
+
+
+## Regression of accidents against weather condition
+Finally, we want to explore the association between number of accidents and weather conditions: visibility, temperature, and pressure.
+
+This is the correlation plot of number of accidents weather conditions. 
+```{r, message = FALSE, warning=FALSE}
+chart.Correlation(as.matrix(accidents2[, c(2, 25:29, 31:32)]), histogram=TRUE, pch=19)
+```
+
+From the plot, there are potential linear relationship between sevesity and weather conditions. And we include interaction of temperature*pressure. 
+
+```{r, message=FALSE, warning=FALSE}
+reg_weather = lm(severity ~ visibility_mi + temperature_f * pressure_in, data = accidents2) 
+summary(reg_weather)
+```
+
+Based on the summary output of the model, it is indicated that the main effect of temperature and its interaction with pressure have the most significance. The main effects of visibility and pressure are also significant with p-values less than the predetermined level of 0.05. The regression line is:
+$$Y = -18.170 - 0.016*visibility + 0.555*temperature + 0.675*pressure - 0.018*temperature*pressure$$
+
+
+
+
+
+
