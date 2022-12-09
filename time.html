@@ -420,6 +420,7 @@ hour, day, and month among five boroughs.</p>
 <div id="total-accidents-over-month-by-borough" class="section level3">
 <h3>Total accidents over month by borough</h3>
 <pre class="r"><code>accidents1 %&gt;% 
+  filter(!is.na(borough)) %&gt;%
   separate(crash_date, into = c(&#39;year&#39;, &#39;month&#39;, &#39;day&#39;), sep = &quot;-&quot;) %&gt;% 
   mutate(
     year = as.numeric(year),
@@ -443,19 +444,18 @@ hour, day, and month among five boroughs.</p>
   theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 5) ) +
   facet_wrap(~ borough, nrow = 1)</code></pre>
 <p><img src="time_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
-<ul>
-<li>This graph shows the total number of accidents in 5 boroughs from
+<p>This graph shows the total number of accidents in 5 boroughs from
 January to August in 2020. We can see that in January, February, and
 March, the accident numbers in these boroughs are much higher than in
 other months, and the accident numbers in April is the lowest for 5
 boroughs. Also, Brooklyn has the largest accident number and Saten
 Island has the smallest accident number among all boroughs in every
-month in New York.</li>
-</ul>
+month in New York.</p>
 </div>
 <div id="total-accidents-over-weekday" class="section level3">
 <h3>Total accidents over weekday</h3>
 <pre class="r"><code>accidents1 %&gt;% 
+  filter(!is.na(borough)) %&gt;%
   mutate(crash_date = as.Date(crash_date),
          weekday = weekdays(crash_date)) %&gt;% 
   mutate(weekday = as.factor(weekday),
@@ -476,16 +476,15 @@ month in New York.</li>
     color = &quot;Borough&quot;
     )</code></pre>
 <p><img src="time_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<ul>
-<li>This plot shows the total accident number over weekday by borough.
-We can see that 5 boroughs have a similar trend, and the accident number
-is the largest on Friday and lowest on Sunday. Brooklyn also has the
-largest daily accident number and Staten Island has the lowest.</li>
-</ul>
+<p>This plot shows the total accident number over weekday by borough. We
+can see that 5 boroughs have a similar trend, and the accident number is
+the largest on Friday and lowest on Sunday. Brooklyn also has the
+largest daily accident number and Staten Island has the lowest.</p>
 </div>
 <div id="total-accidents-over-hour" class="section level3">
 <h3>Total accidents over hour</h3>
 <pre class="r"><code>accidents1 %&gt;%
+  filter(!is.na(borough)) %&gt;%
   separate(crash_time, into = c(&#39;hour&#39;, &#39;minute&#39;, &#39;second&#39;), sep = &quot;:&quot;) %&gt;% 
   mutate(hour = as.numeric(hour)) %&gt;% 
   group_by(borough, hour) %&gt;%
@@ -500,13 +499,11 @@ largest daily accident number and Staten Island has the lowest.</li>
     ) +
   facet_wrap(~ borough, nrow = 2)</code></pre>
 <p><img src="time_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<ul>
-<li>This plot shows the total accident number during 24 hours of a day
-by borough. We can see that 5 boroughs have a similar daily trend. The
+<p>This plot shows the total accident number during 24 hours of a day by
+borough. We can see that 5 boroughs have a similar daily trend. The
 number of accidents is relatively low from 0:00 am to 6:00 am, then
 increases and keep high in 8:00 am to 17:00 pm, and drops until 24:00
-pm.</li>
-</ul>
+pm.</p>
 </div>
 <div id="total-accidents-in-different-part-of-day-by-weekdays"
 class="section level3">
@@ -529,17 +526,15 @@ class="section level3">
   scale_x_continuous(limits = c(0, 23)) +
   facet_wrap(~ weekday, nrow = 2) </code></pre>
 <p><img src="time_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<ul>
-<li>By dividing the number of car accidents by weekdays and hours, we
-can find that the number of car accidents tends to increase and then
+<p>By dividing the number of car accidents by weekdays and hours, we can
+find that the number of car accidents tends to increase and then
 decrease during the day. Among them, 13:00 to 19:00 is the peak period
 of car accidents. During the week, the number of crashes is higher on
 weekdays than on weekends, and the peak of crashes is higher on
 weekdays. The reason for the above may be that people are more likely to
 be involved in crashes on weekdays between 13:00 and 19:00, when they
 are commuting in the rush hours. On weekends, when people spend more
-time at home, so the number of car accidents is relatively lower.</li>
-</ul>
+time at home, so the number of car accidents is relatively lower.</p>
 </div>
 
 

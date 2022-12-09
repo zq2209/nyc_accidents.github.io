@@ -1,0 +1,161 @@
+---
+title: "Casualty"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+library(tidyverse)
+library(plotly)
+#library(broom)
+library(dplyr)
+library(leaflet)
+```
+
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+### Accident Casualty {.tabset}
+
+In this section, we'll focus on the casualty of the car accidents. More specifically, we'll visualize the number of killed or injured people among different boroughs.
+
+#### People injured by borough
+
+```{r, message=FALSE, warning=FALSE}
+injured_borough_box =
+  accidents1 %>%
+  filter(!is.na(borough)) %>%
+  plot_ly(x = ~number_of_persons_injured, color = ~borough, type = "box", colors = "viridis") %>% 
+  layout(title = "<b>Number of injuries by Borough</b>",
+         xaxis = list(title = "Number of people injured"))
+injured_borough_box
+```
+
+#### People killed by borough
+
+```{r}
+killed_borough_box = 
+  accidents1 %>%
+  filter(!is.na(borough)) %>%
+  plot_ly(x = ~number_of_persons_killed, color = ~borough, type = "box", colors = "viridis") %>% 
+  layout(title = "<b>Number of people killed by Borough</b>",
+         xaxis = list(title = "Number of people killed"))
+killed_borough_box
+```
+
+In each crash accident, Manhattan had the least serious injuries, the other boroughs had similar injuries situation but Brooklin had the largest number of injuries which is 15. As for the deaths in car accidents,these boroughs were similar and not serious. The median number of fatalities per crash was 0. However, Brooklyn also had the highest number of fatalities which is 3. Based on the above information, it can be concluded that Brooklyn has the most serious car accident fatalities.
+
+median:0
+
+injured: 
+max : brooklin: 15, manhatton 5
+most severe: brooklin, 
+least severe: manhatton
+
+killed: few
+
+### People injured and killed by borough
+
+```{r, message=FALSE, warning=FALSE}
+injured_killed_bar =
+accidents1 %>% 
+  dplyr::select(borough, number_of_persons_injured, number_of_persons_killed) %>%
+  group_by(borough) %>%
+  mutate(injuries_total = sum(number_of_persons_injured),
+            killed_total = sum(number_of_persons_killed)) %>%
+  dplyr::select(borough, injuries_total, killed_total) %>%
+  unique() %>%
+  filter(!is.na(borough)) %>%
+  pivot_longer(
+    injuries_total:killed_total, 
+    names_to = "types_of_casualties", 
+    values_to = "number_of_casualties")
+
+injured_killed_bar_plot = 
+  injured_killed_bar %>%
+  mutate(borough = as.factor(borough),
+         borough = fct_relevel(borough, "NA", "Brooklyn", "Queens", "Bronx", "Manhattan", "Staten island")) %>%
+ggplot(aes(x = borough, y = number_of_casualties, fill = types_of_casualties)) +
+  geom_bar(stat = "identity",
+           position = "dodge",
+           width = 0.8) +
+  geom_text(aes(label = number_of_casualties),
+            size = 4,
+            position = position_dodge(width = 0.8), 
+            vjust = -0.3) +
+  labs(
+    title = "Frequency of casualties in boroughs",
+    x = "borough",
+    y = "Number of casualties in each borough",
+    fill = "Types") +
+  theme_bw(base_size = 12) +  
+  theme(axis.text = element_text(colour = 'black'),
+        plot.title = element_text(hjust = 0.5))
+injured_killed_bar_plot
+```
+
+Without considering NA, from 1/2020 to 8/2020, Brooklyn had the highest total number of injuries and fatalities. Conversely, Staten island had the lowest total number of injuries and fatalities in car accidents.
+
+
+Total number of people injured in each borough: max: brooklin(6024), min:staten island(610)
+Total number of people injured in each borough: max:brooklin(27), min:staten island(6)
+
+### Total number of people injured in each borough
+
+```{r, message=FALSE, warning=FALSE}
+casualties_table = 
+accidents1 %>% 
+  group_by(borough) %>%
+  summarize(injuries_total = sum(number_of_persons_injured),
+  killed_total = sum(number_of_persons_killed)) %>%
+  filter(!is.na(borough)) 
+
+injuries_borough_plot = 
+casualties_table %>%
+  mutate(borough = forcats::fct_reorder(borough, injuries_total, .desc = TRUE)) %>%
+  ggplot(aes(x = borough, y = injuries_total, fill = borough)) +
+  geom_bar(stat = "identity",
+           width = 0.8) +
+  geom_text(aes(label = injuries_total),
+            size = 4,
+            position = position_dodge(width = 0.8), 
+            vjust = -0.3) +
+  labs(
+    title = "Frequency of people injured in boroughs",
+    x = "borough",
+    y = "Number of people injured in each borough") +
+  theme_bw(base_size = 12) +  
+  theme(axis.text = element_text(colour = 'black'),
+        plot.title = element_text(hjust = 0.5))
+injuries_borough_plot
+```
+
+### Total number of people killed in each borough
+
+```{r, message=FALSE, warning=FALSE}
+killed_borough_plot = 
+casualties_table %>%
+  mutate(borough = forcats::fct_reorder(borough, killed_total, .desc = TRUE)) %>%
+  ggplot(aes(x = borough, y = killed_total, fill = borough)) +
+  geom_bar(stat = "identity",
+           width = 0.8) +
+  geom_text(aes(label = killed_total),
+            size = 4,
+            position = position_dodge(width = 0.8), 
+            vjust = -0.3) +
+  labs(
+    title = "Frequency of people killed in boroughs",
+    x = "borough",
+    y = "Number of people killed in each borough") +
+  theme_bw(base_size = 12) +  
+  theme(axis.text = element_text(colour = 'black'),
+        plot.title = element_text(hjust = 0.5))
+killed_borough_plot
+```
+

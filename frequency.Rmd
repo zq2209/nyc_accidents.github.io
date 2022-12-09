@@ -45,7 +45,7 @@ contr_factors %>%
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) 
 ```
 
-- We first tried to find out which factors are the most common in leading to car accidents. Thus, we constructed a bar plot illustrating the top 10 most common contributing factors of car accidents. Besides those accidents that do not have reasons specified, drivers' inattention and distraction are shown to be the top common factor resulting in car accidents. Other common reasons include following the front car too closely, failure to yield right-of-way, and so forth. 
+We first tried to find out which factors are the most common in leading to car accidents. Thus, we constructed a bar plot illustrating the top 10 most common contributing factors of car accidents. Besides those accidents that do not have reasons specified, drivers' inattention and distraction are shown to be the top common factor resulting in car accidents. Other common reasons include following the front car too closely, failure to yield right-of-way, and so forth. 
 
 ### Top 10 streets of accidents 
 
@@ -71,7 +71,7 @@ streets %>%
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) 
 ```
 
-- We then explored the streets where most car accidents have taken place. The bar graph indicates that Belt Parkway has the most car accidents. Besides, Long Island Expressway, Brooklyn Queens Expressway, and FDR Drive also have a relatively great amount of accidents occurred. 
+We then explored the streets where most car accidents have taken place. The bar graph indicates that Belt Parkway has the most car accidents. Besides, Long Island Expressway, Brooklyn Queens Expressway, and FDR Drive also have a relatively great amount of accidents occurred. 
 
 ### Number of accidents in boroughs by month 
 
@@ -93,7 +93,7 @@ accidents1 %>%
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
 
-- We also investigated the overall pattern of car accidents occurred in different boroughs over month. There tend to be most car accidents in January and February while least car accidents took place in April. Overall, the number of car accidents decreases from January to April and increases from April to July. Brooklyn seems to have the most car accidents while least car accidents occurred in Staten Island over the 8 months in New York City. 
+We also investigated the overall pattern of car accidents occurred in different boroughs over month. There tend to be most car accidents in January and February while least car accidents took place in April. Overall, the number of car accidents decreases from January to April and increases from April to July. Brooklyn seems to have the most car accidents while least car accidents occurred in Staten Island over the 8 months in New York City. 
 
 ### Overall number of accidents by day 
 
@@ -109,4 +109,4 @@ accidents1 %>%
   theme(legend.position = "right", plot.title = element_text(hjust = 0.5)) 
 ```
 
-- A bar plot of number of car accidents by day over the 8 months was also constructed. Most car accidents took place from January to March while April has the least accidents. This graph also supports the pattern demonstrated by the plot above. 
+A bar plot of number of car accidents by day over the 8 months was also constructed. Most car accidents took place from January to March while April has the least accidents. This graph also supports the pattern demonstrated by the plot above. 
