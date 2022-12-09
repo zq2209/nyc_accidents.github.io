@@ -10,7 +10,7 @@ library(lubridate)
 # basic data cleaning
 ## First dataset cleaning
 accidents1 = 
-  read_csv("~/data/NYC Accidents 2020.csv") %>% 
+  read_csv("./data/NYC Accidents 2020.csv") %>% 
   janitor::clean_names() %>% 
   mutate(
     borough = case_when(borough == "BRONX" ~ "Bronx", 
@@ -22,7 +22,7 @@ accidents1 =
     weekday = weekdays(crash_date), 
     month = month(crash_date), 
     day = day(crash_date),
-    hour = strftime(NYC_data1$crash_time, "%H"),
+    hour = strftime(crash_time, "%H"),
     hour = fct_recode(hour, "0" = "00", "1" = "01", "2" = "02", "3" = "03", "4" = "04", "5" = "05", "6" = "06", "7" = "07", "8" = "08", "9" = "09")
   )
 

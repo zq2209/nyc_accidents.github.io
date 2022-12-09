@@ -1,7 +1,7 @@
 # ###
 #
 # This file contains formatting standards (figures, ggplot themes)
-# Call in code by using source(code/formatting.R)
+# Call in code by using source(code/general_formatting.R)
 # 
 # ###
 
