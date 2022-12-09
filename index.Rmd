@@ -18,9 +18,7 @@ During the first couple of months in New York, one of our group members witnesse
 
 Therefore, we are interested in exploring some factors related to car accidents. Through data analysis, we will obtain the peak time period, concentrated areas, and main causes of accidents, aiming to effectively decrease the rate of car accidents taking place and further ensure personal safety.
 
-
 &nbsp;
-
 
 ### Website Summary
 
