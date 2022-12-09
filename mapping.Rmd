@@ -1,0 +1,127 @@
+---
+title: "Mapping"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: yeti
+---
+```{r setup, include=FALSE}
+library(tidyverse)
+library(leaflet)
+library(plotly)
+library(dplyr)
+library(lubridate)
+knitr::opts_chunk$set(
+  fig.width = 10,
+  fig.asp = .5,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+source("code/data_cleaning.R")
+source("code/general_formatting.R")
+```
+
+## Mapping: Number of car accidents
+To more clearly visualize the relationship and between latitude and longitude and the number of crashes, we first aggregated the latitude and longitude and kept two decimal places. 
+
+From the mapping plot, we can see that from 2020/1 to 2020/8, the number of accidents occurred more in Bronx and Manhattan, followed by Brooklyn. Fewer accidents occurred in Queens and Staten Island. 
+```{r, message = FALSE, warning=FALSE}
+NYC_data1 = read_csv("./data/NYC Accidents 2020.csv",
+                col_names = TRUE) %>%
+  janitor::clean_names() 
+
+map_data =
+NYC_data1 %>%
+  filter(!is.na(borough)) %>%
+  filter(!is.na(latitude)) %>%
+  filter(!is.na(longitude)) %>%
+  mutate(
+    latitude = round(latitude, digits = 2),
+    longitude = round(longitude, digits = 2)) %>%
+  group_by(latitude, longitude) %>%
+  count(latitude, longitude, borough) %>%
+  arrange(desc(n)) %>%
+mutate(text_label = str_c("</b>Lat: ", latitude, "°", "</b><br>Lng: ", longitude, "°", "</b><br>Borough: ", borough, "</b><br>Number_of_accidents: ", n))
+
+pal = colorNumeric(
+  palette = "YlGnBu",
+  domain = map_data$n) 
+
+map_data %>%
+  leaflet()  %>%
+  setView(lng = -74.00666, lat = 40.71643, zoom = 10) %>% 
+  addTiles() %>% 
+  addLegend("bottomright", 
+            pal = pal, 
+            values = ~n,
+            title = "Number of car accidents</br>",
+            bins = 10,
+            opacity = 1,
+            labFormat = labelFormat(suffix = " cases")
+  ) %>%
+  addCircleMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    color = ~pal(n),
+    radius = 4,
+    popup = ~ text_label,
+    fillOpacity = 0.8,
+    stroke = FALSE,
+    opacity = 1) 
+```
+
+
+## Mapping: Number of Injuries
+To visualize the number of injuries in each accidents, we employ the latitude and longitude of each accidents to see where have the most injuries.  
+
+From the plot, we can tell that the maximum injuries in one accident is 30 people. But most accidents have injuries less than 5. A few accidents have more than 5 injuries.  
+```{r, message = FALSE, warning=FALSE}
+accidents_2020_map = NYC_data1 %>% 
+  filter(!is.na(borough)) %>% 
+  filter(!is.na(latitude)) %>%
+  filter(!is.na(longitude)) %>%
+  mutate(
+    total_injured = number_of_persons_injured + number_of_pedestrians_injured + number_of_cyclist_injured + number_of_motorist_injured,
+    textlab = paste0("Number of Injuries: ", total_injured, "\nAddress: ", on_street_name)
+  )
+```
+
+```{r, message = FALSE, warning=FALSE}
+total_injuried_map = accidents_2020_map %>% 
+  plot_ly(
+    lat = ~latitude, 
+    lon = ~longitude, 
+    type = "scattermapbox", 
+    mode = "markers", 
+    alpha = 0.5,
+    color = ~total_injured,
+    text = ~textlab,
+    colors = "YlOrRd")
+```
+
+
+```{r, message = FALSE, warning=FALSE}
+total_injuried_map %>% layout(
+    mapbox = list(
+      style = 'carto-positron',
+      zoom = 9,
+      center = list(lon = -73.9, lat = 40.7)),
+      title = "<b> Total Number of Injuries </b>",
+      legend = list(title = list(text = "Borough of Accidents", size = 9),
+                    orientation = "h",
+                   font = list(size = 9)))
+```

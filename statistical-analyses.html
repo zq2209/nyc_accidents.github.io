@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Statistical Analyses</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Exploratory Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="frequency.html">Car Accidents Frequency</a>
+    </li>
+    <li>
+      <a href="time.html">Car Accidents over Time</a>
+    </li>
+    <li>
+      <a href="car_types.html">Car Accidents by Car Type</a>
+    </li>
+    <li>
+      <a href="weather.html">Weather and Accidents</a>
+    </li>
+    <li>
+      <a href="casualty.html">Accidents Casualty</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Statistical Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="statistical-analyses.html">Statistical Analyses</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analyses</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="mapping.html">Mapping</a>
+</li>
+<li>
+  <a href="final_report.html">Project Report</a>
+</li>
+<li class="dropdown-header">Screencast</li>
+<li>
+  <a href="references.html">References</a>
+</li>
+<li>
+  <a href="https://github.com/zq2209/nyc_accidents.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Statistical Analyses</h1>
+
+</div>
+
+
+<div
+id="chi-squared-test---car-accidents-in-different-weekdays-and-different-boroughs"
+class="section level2">
+<h2>Chi-Squared test - Car accidents in different weekdays and different
+boroughs</h2>
+<p>To test whether the proportion of numbers of car accidents in each
+weekday among boroughs are equal, we perform Chi-Squared test.</p>
+<p><strong><em>H0</em></strong>: The proportion of car accidents number
+in weekdays among boroughs are equal.<br />
+<strong><em>H1</em></strong>: Not all proportion of car accidents number
+in weekdays among boroughs are equal.</p>
+<pre class="r"><code>NYC_data1 = read_csv(&quot;./data/NYC Accidents 2020.csv&quot;,
+                col_names = TRUE) %&gt;%
+  janitor::clean_names() 
+
+week_accidents = 
+  NYC_data1 %&gt;%
+  dplyr::select(crash_date, borough) %&gt;%
+  mutate(weekdays = weekdays(NYC_data1$crash_date, abbreviate = T) ,
+         weekdays = fct_recode(weekdays, &quot;Mon&quot; = &quot;周一&quot;, &quot;Tue&quot; = &quot;周二&quot;, &quot;Wed&quot; = &quot;周三&quot;, &quot;Thu&quot; = &quot;周四&quot;, &quot;Fri&quot; = &quot;周五&quot;, &quot;Sat&quot; = &quot;周六&quot;, &quot;Sun&quot; = &quot;周日&quot;)) %&gt;%
+  filter(!is.na(borough)) %&gt;%
+  mutate(weekdays = as.factor(weekdays),
+         weekdays = fct_relevel(weekdays, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;))
+
+table(week_accidents$borough, week_accidents$weekdays)</code></pre>
+<pre><code>##                
+##                  Mon  Tue  Wed  Thu  Fri  Sat  Sun
+##   BRONX         1347 1339 1296 1448 1511 1378 1098
+##   BROOKLYN      2337 2450 2391 2557 2758 2363 2051
+##   MANHATTAN      993 1103 1084 1184 1286  934  769
+##   QUEENS        1995 1939 2014 2011 2222 2046 1790
+##   STATEN ISLAND  178  221  198  209  250  205  185</code></pre>
+<pre class="r"><code>chisq.test(table(week_accidents$borough, week_accidents$weekdays))</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  table(week_accidents$borough, week_accidents$weekdays)
+## X-squared = 73.531, df = 24, p-value = 6.303e-07</code></pre>
+<pre class="r"><code>x_crit = qchisq(0.95, 24)
+x_crit</code></pre>
+<pre><code>## [1] 36.41503</code></pre>
+<p><strong>Interpretation</strong>: At significant level α=0.05, p-value
+= 6.303e-07 &lt; 0.05, so we reject the null hypothesis and conclude
+that there is at least one borough’s proportion of car accidents for
+weekdays is different from others.</p>
+</div>
+<div
+id="chi-square-test---each-borough-car-types-proportion-of-accident-amounts"
+class="section level2">
+<h2>Chi-square test - Each borough Car type’s proportion of accident
+amounts</h2>
+<p>To test whether the proportion of numbers of car accidents in each
+five car types among boroughs are equal, we performed Chi-square
+test.</p>
+<p><strong><em>H0</em></strong>: Each borough’s proportion of accident
+amounts for five car types are same.<br />
+<strong><em>H1</em></strong>: Each borough’s proportion of accident
+amounts for five car types are not same.</p>
+<pre class="r"><code>accidents_2020 = read_csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
+  janitor::clean_names()
+
+five_common_cartype = 
+  accidents_2020 %&gt;%
+  select(borough, vehicle_type_code_1) %&gt;% 
+  filter(vehicle_type_code_1 %in%
+           c(&quot;Sedan&quot;,
+             &quot;Station Wagon/Sport Utility Vehicle&quot;,
+             &quot;Taxi&quot;,
+             &quot;Pick-up Truck&quot;,
+             &quot;Box Truck&quot;)) %&gt;%
+  count(vehicle_type_code_1, borough) %&gt;% 
+  pivot_wider(
+    names_from = &quot;vehicle_type_code_1&quot;,
+    values_from = &quot;n&quot;
+  )  %&gt;% 
+  data.matrix() %&gt;% 
+  subset(select = -c(borough))
+
+rownames(five_common_cartype) &lt;- c(&quot;Bronx&quot;, &quot;Brooklyn&quot;, &quot;Manhattan&quot;, &quot;Queens&quot;, &quot;Staten Island&quot;, &quot;Others&quot;)
+
+five_common_cartype %&gt;% 
+  knitr::kable(caption = &quot;Table of Top Five Car Type&quot;, caption.pos = &quot;top&quot;)</code></pre>
+<table>
+<caption>Table of Top Five Car Type</caption>
+<colgroup>
+<col width="16%" />
+<col width="11%" />
+<col width="16%" />
+<col width="7%" />
+<col width="42%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Box Truck</th>
+<th align="right">Pick-up Truck</th>
+<th align="right">Sedan</th>
+<th align="right">Station Wagon/Sport Utility Vehicle</th>
+<th align="right">Taxi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bronx</td>
+<td align="right">158</td>
+<td align="right">187</td>
+<td align="right">4451</td>
+<td align="right">3288</td>
+<td align="right">411</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="right">309</td>
+<td align="right">417</td>
+<td align="right">7865</td>
+<td align="right">6329</td>
+<td align="right">425</td>
+</tr>
+<tr class="odd">
+<td align="left">Manhattan</td>
+<td align="right">275</td>
+<td align="right">213</td>
+<td align="right">2828</td>
+<td align="right">2279</td>
+<td align="right">749</td>
+</tr>
+<tr class="even">
+<td align="left">Queens</td>
+<td align="right">188</td>
+<td align="right">359</td>
+<td align="right">6460</td>
+<td align="right">5721</td>
+<td align="right">250</td>
+</tr>
+<tr class="odd">
+<td align="left">Staten Island</td>
+<td align="right">7</td>
+<td align="right">49</td>
+<td align="right">847</td>
+<td align="right">450</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Others</td>
+<td align="right">480</td>
+<td align="right">657</td>
+<td align="right">11898</td>
+<td align="right">9474</td>
+<td align="right">929</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>chisq.test(five_common_cartype)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  five_common_cartype
+## X-squared = 1614.5, df = 20, p-value &lt; 2.2e-16</code></pre>
+<p><strong>Interpretation</strong>: The result of chi-square shows that
+χ2&gt;χcrit, at significant level α=0.05, so we reject the null
+hypothesis and conclude that there does exist at least one car type’s
+proportion of accident amounts is different than others.</p>
+</div>
+<div
+id="proportion-test---the-proportions-of-car-accidents-across-boroughs."
+class="section level2">
+<h2>Proportion test - The proportions of car accidents across
+boroughs.</h2>
+<p>We want to see whether the car accidents rates are same of each
+borough, so we conduct a proportion test. We derived the population of
+each borough from the most recent census.</p>
+<p><strong><em>H0</em></strong>: The proportion of the car accidents is
+the same across all boroughs.<br />
+<strong><em>H1</em></strong>: The proportion of the car accidents is not
+the same across all boroughs.</p>
+<pre class="r"><code>data &lt;- read.csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(crash_date, crash_time, borough, number_of_persons_injured, 
+  number_of_persons_killed, number_of_pedestrians_injured, 
+  number_of_pedestrians_killed, number_of_cyclist_injured, 
+  number_of_cyclist_killed, number_of_motorist_injured, 
+  number_of_motorist_killed) %&gt;% 
+#delete the NAs in borough
+  filter(borough %in% c(&quot;BRONX&quot;, &quot;BROOKLYN&quot;, &quot;QUEENS&quot;, &quot;MANHATTAN&quot;, &quot;STATEN ISLAND&quot;))
+
+url = &quot;https://www.citypopulation.de/en/usa/newyorkcity/&quot;
+nyc_population_html = read_html(url)
+
+population = nyc_population_html %&gt;% 
+  html_elements(&quot;.rname .prio2&quot;) %&gt;% 
+  html_text()
+
+boro = nyc_population_html %&gt;% 
+  html_elements(&quot;.rname a span&quot;) %&gt;% 
+  html_text()
+
+nyc_population = tibble(
+  borough = boro,
+  population = population %&gt;% str_remove_all(&quot;,&quot;) %&gt;% as.numeric()
+) 
+  
+car_accident = data %&gt;%
+  count(borough) %&gt;% 
+  mutate(borough = str_to_title(borough))
+
+acci_popu_boro = left_join(car_accident, nyc_population)
+
+acci_popu_boro %&gt;% 
+  knitr::kable(caption = &quot;Results Table&quot;, caption.pos = &quot;top&quot;)</code></pre>
+<table>
+<caption>Results Table</caption>
+<thead>
+<tr class="header">
+<th align="left">borough</th>
+<th align="right">n</th>
+<th align="right">population</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bronx</td>
+<td align="right">9417</td>
+<td align="right">1472654</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="right">16907</td>
+<td align="right">2736074</td>
+</tr>
+<tr class="odd">
+<td align="left">Manhattan</td>
+<td align="right">7353</td>
+<td align="right">1694251</td>
+</tr>
+<tr class="even">
+<td align="left">Queens</td>
+<td align="right">14017</td>
+<td align="right">2405464</td>
+</tr>
+<tr class="odd">
+<td align="left">Staten Island</td>
+<td align="right">1446</td>
+<td align="right">495747</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>prop.test(acci_popu_boro$n, acci_popu_boro$population)</code></pre>
+<pre><code>## 
+##  5-sample test for equality of proportions without continuity correction
+## 
+## data:  acci_popu_boro$n out of acci_popu_boro$population
+## X-squared = 1482.5, df = 4, p-value &lt; 2.2e-16
+## alternative hypothesis: two.sided
+## sample estimates:
+##      prop 1      prop 2      prop 3      prop 4      prop 5 
+## 0.006394577 0.006179292 0.004339971 0.005827150 0.002916810</code></pre>
+<p><strong>Interpretation</strong>: From the test result, we can see
+that the p-value is smaller than 0.01, so we have enough evidence to
+conclude that the proportions of car accidents are different across
+boroughs.</p>
+</div>
+<div id="anova-test---month-and-accidents" class="section level2">
+<h2>ANOVA Test - Month and accidents</h2>
+<p>In order to study how month are associated with the number of car
+accidents, We try to use an ANOVA test across months.</p>
+<p><strong><em>H0</em></strong>: The average number of accidents are not
+different across months.<br />
+<strong><em>H1</em></strong>: The average number of accidents are
+different across months.</p>
+<pre class="r"><code>accidents = 
+  read_csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  mutate(
+    borough = case_when(borough == &quot;BRONX&quot; ~ &quot;Bronx&quot;, 
+                        borough == &quot;BROOKLYN&quot; ~ &quot;Brooklyn&quot;, 
+                        borough == &quot;QUEENS&quot; ~ &quot;Queens&quot;, 
+                        borough == &quot;MANHATTAN&quot; ~ &quot;Manhattan&quot;, 
+                        borough == &quot;STATEN ISLAND&quot; ~ &quot;Staten Island&quot;), 
+    crash_date = as.Date(crash_date, format = &quot;%y-%m-%d&quot;), 
+    weekday = weekdays(crash_date), 
+    month = month(crash_date), 
+    day = day(crash_date)
+  ) 
+
+fit_accidents = 
+  accidents %&gt;% 
+  mutate(month = as.factor(month)) %&gt;% 
+  group_by(month, weekday, day) %&gt;% 
+  summarize(num_accidents = n()) 
+fit_accidents_month = lm(num_accidents ~ month, data = fit_accidents)  
+anova(fit_accidents_month) %&gt;% 
+  knitr::kable(caption = &quot;One way anova of number of accidents and month&quot;, caption.pos = &quot;top&quot;)</code></pre>
+<table>
+<caption>One way anova of number of accidents and month</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">Sum Sq</th>
+<th align="right">Mean Sq</th>
+<th align="right">F value</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">month</td>
+<td align="right">7</td>
+<td align="right">2916412</td>
+<td align="right">416630.245</td>
+<td align="right">75.89771</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Residuals</td>
+<td align="right">234</td>
+<td align="right">1284511</td>
+<td align="right">5489.365</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation</strong>: As indicated by the result of the
+ANOVA test, the p value is very small. Therefore, the null hypothesis is
+rejected and we can conclude that the average number of accidents are
+different across months in New York City in 2020.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
