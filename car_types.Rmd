@@ -18,6 +18,8 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
+### Car Accident by Car Type
+
 Then, we want to know how types of cars are associated with the number of accidents. A bar plot of the number of accidents by car type clearly represents the relationship.  
 
 ### Number of Accidents by Car Type
