@@ -54,16 +54,13 @@ The plot shows the frequency of accidents by weather. The most common weather co
 
 ```{r, message=FALSE, warning=FALSE}
 accidents_windspeed = accidents2 %>% 
-  ggplot(aes(x = wind_speed_mph)) +
+  ggplot(aes(x = wind_speed_mph, y = ..density..)) +
   geom_histogram(color = "darkblue", fill = "lightblue") +
   labs(
     title = "Histogram of No. of Accidents by wind speed", 
        x = "Wind speed"
-  )
+  ) + geom_density()
 accidents_windspeed
-
-ggplot(accidents2, aes(x=wind_speed_mph)) + 
-  geom_density()
 ```
 
 The plot shows the frequency of accidents by wind speed. As shown in plot, the distribution of frequency is right-skewed. The most common wind speed is from 0 to 7.5. The frequency of this interval is higher than 150. From 7.5 to 12.5, the frequency is fairly common. And the frequency of wind speed larger than 12.5 is less than 25. 
@@ -74,20 +71,11 @@ The plot shows the frequency of accidents by wind speed. As shown in plot, the d
 
 ```{r, message=FALSE, warning=FALSE}
 ggplot(accidents2, aes(x = wind_speed_mph))+
-  geom_boxplot(color="black", fill="white")+
+  geom_boxplot(color="black", fill="light blue")+
   facet_grid(severity ~ .)
 
-severity = accidents2 %>% 
-  group_by(severity) %>% 
-  dplyr::summarize(obs = n()) %>% 
-  arrange(desc(obs))
-
 ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
-  geom_violin(trim = FALSE, aes(fill = severity)) +
-  theme_bw()
-
-ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
-  geom_violin(trim = FALSE, aes(fill = severity)) +
+  geom_violin(trim = FALSE, fill = "light blue") +
   theme_bw() +
   coord_flip() +
   labs(

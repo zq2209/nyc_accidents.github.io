@@ -451,17 +451,14 @@ Cloudly, Light Rain, Partly Cloudly, Rain and Fog.</p>
 <div id="total-accidents-by-wind-speed" class="section level2">
 <h2>Total accidents by wind-speed</h2>
 <pre class="r"><code>accidents_windspeed = accidents2 %&gt;% 
-  ggplot(aes(x = wind_speed_mph)) +
+  ggplot(aes(x = wind_speed_mph, y = ..density..)) +
   geom_histogram(color = &quot;darkblue&quot;, fill = &quot;lightblue&quot;) +
   labs(
     title = &quot;Histogram of No. of Accidents by wind speed&quot;, 
        x = &quot;Wind speed&quot;
-  )
+  ) + geom_density()
 accidents_windspeed</code></pre>
 <p><img src="weather_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<pre class="r"><code>ggplot(accidents2, aes(x=wind_speed_mph)) + 
-  geom_density()</code></pre>
-<p><img src="weather_files/figure-html/unnamed-chunk-3-2.png" width="90%" /></p>
 <p>The plot shows the frequency of accidents by wind speed. As shown in
 plot, the distribution of frequency is right-skewed. The most common
 wind speed is from 0 to 7.5. The frequency of this interval is higher
@@ -472,20 +469,11 @@ frequency of wind speed larger than 12.5 is less than 25.</p>
 <div id="severity-and-wind-speed" class="section level2">
 <h2>Severity and wind speed</h2>
 <pre class="r"><code>ggplot(accidents2, aes(x = wind_speed_mph))+
-  geom_boxplot(color=&quot;black&quot;, fill=&quot;white&quot;)+
+  geom_boxplot(color=&quot;black&quot;, fill=&quot;light blue&quot;)+
   facet_grid(severity ~ .)</code></pre>
 <p><img src="weather_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<pre class="r"><code>severity = accidents2 %&gt;% 
-  group_by(severity) %&gt;% 
-  dplyr::summarize(obs = n()) %&gt;% 
-  arrange(desc(obs))
-
-ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
-  geom_violin(trim = FALSE, aes(fill = severity)) +
-  theme_bw()</code></pre>
-<p><img src="weather_files/figure-html/unnamed-chunk-4-2.png" width="90%" /></p>
 <pre class="r"><code>ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) + 
-  geom_violin(trim = FALSE, aes(fill = severity)) +
+  geom_violin(trim = FALSE, fill = &quot;light blue&quot;) +
   theme_bw() +
   coord_flip() +
   labs(
@@ -493,7 +481,7 @@ ggplot(accidents2, aes(x = wind_speed_mph, y = severity)) +
        y = &quot;Wind Speed&quot;, 
        x = &quot;Severity Level&quot;
   )</code></pre>
-<p><img src="weather_files/figure-html/unnamed-chunk-4-3.png" width="90%" /></p>
+<p><img src="weather_files/figure-html/unnamed-chunk-4-2.png" width="90%" /></p>
 <p>This violin plot shows the range of wind speed in each severity
 level. The most common severity is severity 2. For severity 2, the range
 of wind speed is from 0 and 20. In severity 3, the range is from 8 to
