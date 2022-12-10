@@ -61,7 +61,7 @@ In Mapping tab, you will find:
 
 ### Screencast
 
-<iframe width="840" height="472.5" src="https://youtu.be/qAqqgQhVZsQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="840" height="472.5" src="https://www.youtube.com/embed/qAqqgQhVZsQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Collaborators
 
