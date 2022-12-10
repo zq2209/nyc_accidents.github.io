@@ -7,27 +7,13 @@ output:
     toc_float: true
     theme: yeti
 ---
+
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(leaflet)
 library(plotly)
 library(dplyr)
 library(lubridate)
-knitr::opts_chunk$set(
-  fig.width = 10,
-  fig.asp = .5,
-  out.width = "90%"
-)
-
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
-
-options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ```{r, include=FALSE, message=FALSE, warning=FALSE}
@@ -35,17 +21,15 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-## Mapping: Number of car accidents
-To more clearly visualize the relationship and between latitude and longitude and the number of crashes, we first aggregated the latitude and longitude and kept two decimal places. 
+## Mapping: Number of Car Accidents
 
-From the mapping plot, we can see that from 2020/1 to 2020/8, the number of accidents occurred more in Bronx and Manhattan, followed by Brooklyn. Fewer accidents occurred in Queens and Staten Island. 
+In the previous statistical analysis, we conducted a proportion test to see whether the car accidents rates are the same in each borough. The results show that the proportions of car accidents are different across boroughs. Now we are still interested in the relationship between the location and the number of accidents, so we created a map to visualize to further explore this relationship.
+ 
+In order to clearly see the difference in each borough, we first cleaned the data by removing rows with missing values for the borough, latitude, and longitude variables, aggregated the latitude and longitude and kept two decimal places. 
+
 ```{r, message = FALSE, warning=FALSE}
-NYC_data1 = read_csv("./data/NYC Accidents 2020.csv",
-                col_names = TRUE) %>%
-  janitor::clean_names() 
-
 map_data =
-NYC_data1 %>%
+accidents1 %>%
   filter(!is.na(borough)) %>%
   filter(!is.na(latitude)) %>%
   filter(!is.na(longitude)) %>%
@@ -68,7 +52,7 @@ map_data %>%
   addLegend("bottomright", 
             pal = pal, 
             values = ~n,
-            title = "Number of car accidents</br>",
+            title = "Number of Car Accidents</br>",
             bins = 10,
             opacity = 1,
             labFormat = labelFormat(suffix = " cases")
@@ -84,13 +68,16 @@ map_data %>%
     opacity = 1) 
 ```
 
+According to the plot, the color scale indicated the number of car accidents at each location, with warmer colors (yellow) indicating a lower number of accidents and cooler colors (blue and green) indicating a higher number of accidents. From the mapping plot, we can see that the accidents occurred more in Bronx and Manhattan from January 2020 to August 2020, followed by Brooklyn. Fewer accidents occurred in Queens and Staten Island.
+ 
+All of the information can be used to identify areas of the city with higher numbers of car accidents and develop strategies for reducing the number of accidents in those areas. For example, one potential strategy might be deploying more traffic police to areas with high numbers of accidents in order to maintain traffic order and reduce congestion.
 
 ## Mapping: Number of Injuries
-To visualize the number of injuries in each accidents, we employ the latitude and longitude of each accidents to see where have the most injuries.  
 
-From the plot, we can tell that the maximum injuries in one accident is 30 people. But most accidents have injuries less than 5. A few accidents have more than 5 injuries.  
+We generated an interactive map to show the locations of car accidents in New York City in 2020 and the number of injuries resulting from each accident. 
+
 ```{r, message = FALSE, warning=FALSE}
-accidents_2020_map = NYC_data1 %>% 
+accidents_2020_map = accidents1 %>% 
   filter(!is.na(borough)) %>% 
   filter(!is.na(latitude)) %>%
   filter(!is.na(longitude)) %>%
@@ -98,9 +85,7 @@ accidents_2020_map = NYC_data1 %>%
     total_injured = number_of_persons_injured + number_of_pedestrians_injured + number_of_cyclist_injured + number_of_motorist_injured,
     textlab = paste0("Number of Injuries: ", total_injured, "\nAddress: ", on_street_name)
   )
-```
 
-```{r, message = FALSE, warning=FALSE}
 total_injuried_map = accidents_2020_map %>% 
   plot_ly(
     lat = ~latitude, 
@@ -111,10 +96,7 @@ total_injuried_map = accidents_2020_map %>%
     color = ~total_injured,
     text = ~textlab,
     colors = "YlOrRd")
-```
 
-
-```{r, message = FALSE, warning=FALSE}
 total_injuried_map %>% layout(
     mapbox = list(
       style = 'carto-positron',
@@ -125,3 +107,7 @@ total_injuried_map %>% layout(
                     orientation = "h",
                    font = list(size = 9)))
 ```
+
+From the plot, we can tell that the maximum injury in one accident is 30 people. However, most accidents have less than 5 injuries. A few accidents have more than 5 injuries.  
+
+This information can be used to identify areas of the city with higher numbers of injuries and develop strategies for reducing the number of injuries in those areas. For example, one potential strategy might be increasing public awareness of road safety and encouraging drivers to be more careful in areas with high numbers of injuries.
