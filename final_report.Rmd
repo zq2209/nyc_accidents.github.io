@@ -28,7 +28,7 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-## Motivation:
+## Motivation
 
 During the first couple of months in New York, one of our group members witnessed a car accident which caused a huge traffic jam on her way to class. This experience motivates us to do some research and investigate car accidents in New York. According to the Department of Health in New York, there were 1,098 deaths each year due to unintentional motor vehicle traffic-related injuries and 12,093 hospitalizations each year due to motor vehicle traffic-related injuries. 
 
@@ -53,23 +53,34 @@ Motor vehicle collisions reported by the New York City Police Department from Ja
 For the process of data cleaning, we focused on five boroughs in NY for our analysis, and we changed the borough name from all caps to only the first letter in capital. Then we separated the crash date variable into year, month, and day, and separated the crash time variable into hour, minute, and second. Also, we releveled the month and weekday into their standard name. Furthermore, we filtered out all the missing values in the borough.
  
 These are the important variables in our analysis:
-- crash_data: date the car accident happened (split into year, month, day)   
-- crash_time: time the car accident happened during a day (split into hour, minute, second)      
-- borough: borough in which the car accident happened     
-- contributing_factor_vehicle: the contributing factor of the car accident   
-- vehicle_type_code: type of cars in the car accident       
-- weekdays: weekdays from Monday to Sunday      
-- weekdays_type: type of weekdays (workdays and weekends)       
-- Lat: latitude of the accidents         
-- Long: Longitude of the accidents          
+
+- `crash_data`: date the car accident happened (split into year, month, day)  
+
+- `crash_time`: time the car accident happened during a day (split into hour, minute, second)     
+
+- `borough`: borough in which the car accident happened
+
+- `contributing_factor_vehicle`: the contributing factor of the car accident
+
+- `vehicle_type_code`: type of cars in the car accident  
+
+- `weekdays`: weekdays from Monday to Sunday     
+
+- `weekdays_type`: type of weekdays (workdays and weekends)   
+
+- `Lat`: latitude of the accidents      
+
+- `Long`: longitude of the accidents          
 
 #### US Accidents (2016-2021) 
 
 This is a countrywide car accident dataset, which covers 49 states of the USA. The accident data are collected from February 2016 to Dec 2021, using multiple APIs that provide streaming traffic incident (or event) data. These APIs broadcast traffic data captured by a variety of entities, such as the US and state departments of transportation, law enforcement agencies, traffic cameras, and traffic sensors within the road-networks. Currently, there are about 2.8 million accident records in this dataset.   
  
-To be consistent with the other dataset, we only focus on the data points that are in 2020 and New York. In the filtered dataset, these are the variables that we are interested in for analysis:        
-- severity: severity of the accident, a number between 1 and 4. Where 1 indicates the least impact on traffic and 4 represents the most serious impact                  
-- wind_speed _mph: the wind speed when the accidents happened, measured in miles per hour          
+To be consistent with the other dataset, we only focus on the data points that are in 2020 and New York. In the filtered dataset, these are the variables that we are interested in for analysis:     
+
+- `severity`: severity of the accident, a number between 1 and 4. Where 1 indicates the least impact on traffic and 4 represents the most serious impact  
+
+- `wind_speed _mph`: the wind speed when the accidents happened, measured in miles per hour          
 
 ## EDA
 
@@ -838,8 +849,8 @@ The current bar chart of the number of accidents by weather condition shows the 
 
 - ANOVA test: The number of car accidents is associated with month and weekday. 
 - Proportion test: The proportions of car accidents are different across boroughs. 
-- Chi-Square test: At least one car type’s proportion of accident amounts is different than others
-- Chi-Squared test, at least one borough has a different proportion of crashes for weekdays.
+- Chi-Square test: At least one car type’s proportion of accident amounts is different than others.
+- Chi-Squared test: At least one borough has a different proportion of crashes for weekdays.
 
 ### Regression
 
@@ -854,7 +865,9 @@ The current bar chart of the number of accidents by weather condition shows the 
 
 ## Limitation
 
-Several limitations exist for our project. Our first dataset on car accidents in New York City only contained information from January to August of 2020, meaning the sample size is relatively limited and the dataset could be a little out-of-date. The study may not be representative of car accidents taken place in other time periods or locations, indicating a possibly low generalizability. This dataset also does not contain a fair amount of continuous variables, making it hard to conduct related regression analysis. Most of our regression analysis involved using factors and categorical variables. This also leads to why we introduced our second dataset containing information of all car accidents in the United States from 2016 to 2021. This is a relatively complex dataset, which was also seen as one of our limitations for the data manipulation step. To better correspond to the first dataset, we only kept the observations in New York City in 2020 for further analysis. This may also result in another constraint, as the selected sample has a limited size. 
+Several limitations exist for our project. Our first dataset on car accidents in New York City only contained information from January to August of 2020, meaning the sample size is relatively limited and the dataset could be a little out-of-date. The study may not be representative of car accidents taken place in other time periods or locations, indicating a possibly low generalizability. 
+
+This dataset also does not contain a fair amount of continuous variables, making it hard to conduct related regression analysis. Most of our regression analysis involved using factors and categorical variables. This also leads to why we introduced our second dataset containing information of all car accidents in the United States from 2016 to 2021. This is a relatively complex dataset, which was also seen as one of our limitations for the data manipulation step. To better correspond to the first dataset, we only kept the observations in New York City in 2020 for further analysis. This may also result in another constraint, as the selected sample has a limited size. 
 
 ## Strategies for reducing the number of car accidents in NYC
 
