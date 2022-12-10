@@ -49,7 +49,7 @@ map_data %>%
   leaflet()  %>%
   setView(lng = -74.00666, lat = 40.71643, zoom = 10) %>% 
   addTiles() %>% 
-  addLegend("bottomright", 
+  leaflet::addLegend("bottomright", 
             pal = pal, 
             values = ~n,
             title = "Number of Car Accidents</br>",
