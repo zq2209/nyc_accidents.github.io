@@ -1,5 +1,5 @@
 ---
-title: "Statistical Analyses"
+title: "Statistical Tests"
 output: 
   html_document:
     code_folding: hide
