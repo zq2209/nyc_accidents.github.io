@@ -112,7 +112,7 @@ accidents1 %>%
   group_by(hour, weekday) %>%
   count(hour) %>%
   mutate(weekday = as.factor(weekday),
-         weekday = fct_relevel(weekday, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ),
+         weekday = fct_relevel(weekday, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ),
          hour = as.numeric(hour)) %>%
   ggplot(aes(x = hour, y = n, group = 1, color = hour)) + 
   geom_point() + 

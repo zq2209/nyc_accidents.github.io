@@ -424,7 +424,6 @@ weekdays among boroughs are equal.</p>
   accidents1 %&gt;%
   dplyr::select(crash_date, borough) %&gt;%
   mutate(weekdays = weekdays(accidents1$crash_date, abbreviate = T)) %&gt;% 
-#         weekdays = fct_recode(weekdays, &quot;Mon&quot; = &quot;周一&quot;, &quot;Tue&quot; = &quot;周二&quot;, &quot;Wed&quot; = #&quot;周三&quot;, &quot;Thu&quot; = &quot;周四&quot;, &quot;Fri&quot; = &quot;周五&quot;, &quot;Sat&quot; = &quot;周六&quot;, &quot;Sun&quot; = &quot;周日&quot;)) %&gt;%
   filter(!is.na(borough)) %&gt;%
   mutate(weekdays = as.factor(weekdays),
          weekdays = fct_relevel(weekdays, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;))

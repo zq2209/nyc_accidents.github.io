@@ -33,7 +33,6 @@ week_accidents =
   accidents1 %>%
   dplyr::select(crash_date, borough) %>%
   mutate(weekdays = weekdays(accidents1$crash_date, abbreviate = T)) %>% 
-#         weekdays = fct_recode(weekdays, "Mon" = "周一", "Tue" = "周二", "Wed" = #"周三", "Thu" = "周四", "Fri" = "周五", "Sat" = "周六", "Sun" = "周日")) %>%
   filter(!is.na(borough)) %>%
   mutate(weekdays = as.factor(weekdays),
          weekdays = fct_relevel(weekdays, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))

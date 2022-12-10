@@ -510,7 +510,7 @@ class="section level3">
   group_by(hour, weekday) %&gt;%
   count(hour) %&gt;%
   mutate(weekday = as.factor(weekday),
-         weekday = fct_relevel(weekday, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot; ),
+         weekday = fct_relevel(weekday, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;, &quot;Sunday&quot; ),
          hour = as.numeric(hour)) %&gt;%
   ggplot(aes(x = hour, y = n, group = 1, color = hour)) + 
   geom_point() + 
