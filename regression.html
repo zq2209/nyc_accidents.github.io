@@ -366,7 +366,7 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="statistical-analyses.html">Statistical Analyses</a>
+      <a href="statistical-analyses.html">Statistical Tests</a>
     </li>
     <li>
       <a href="regression.html">Regression Analyses</a>
@@ -561,9 +561,8 @@ decrease by approximately 24.</p>
 <div id="regression-of-accidents-against-weather-condition"
 class="section level3">
 <h3>Regression of accidents against weather condition</h3>
-<p>Finally, we want to explore the association between the number of
-accidents and weather conditions: visibility, temperature, and
-pressure.</p>
+<p>Finally, we want to explore the association between severity and
+weather conditions: visibility, temperature, and pressure.</p>
 <p>This is the correlation plot between the number of accidents and
 weather conditions.</p>
 <pre class="r"><code>chart.Correlation(as.matrix(accidents2[, c(2, 25:29, 31:32)]), histogram=TRUE, pch=19)</code></pre>

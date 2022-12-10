@@ -22,34 +22,44 @@ Therefore, we are interested in exploring some factors related to car accidents.
 
 ### Website Summary
 
+Please refer to [final report](final_report.html) for details.
+
 In the exploratory analyses section, you will find:
 
-- Exploration of frequency of car accidents
+- Exploration of [frequency](frequency.html) of car accidents
 
-- Analyses of car accidents over hour, day, and month
+- Analyses of car accidents over [time](time.html)
 
-- Investigation of accident casualty
+- Investigation of accident [casualty](casualty.html)
 
-- Examination of car accidents by vehicle types
+- Examination of car accidents by [vehicle types](car_types.html)
 
-- Association between weather and car accidents 
+- Association between [weather](weather.html) and car accidents 
 
+Our statistical analyses section includes two parts: 
 
-Our statistical analyses section includes two parts: statistical test and regression analyses:
+[Statistical tests](statistical-analyses.html):
 
 - Anova Test - whether month and weekday are associated with car accidents
 
-- Chi-squared Test - whether the vehicle types proportion vary among boroughs; whether the accidents proportion for weekdays vary among boroughs
+- Chi-squared Test - whether the vehicle types proportion vary among boroughs
+
+- Chi-squared Test - whether the accidents proportion for weekdays vary among boroughs
 
 - Proportion Test - whether proportions of car accidents are different across boroughs
 
-- Number of car accidents vs day or night(night = 1, day = 0) - whether there is an association between the number of accidents and the day or night of a day
+[Regression analyses](regression.html):
 
-- Number of car accidents vs weekdays(weekends = 1, workdays = 0) - whether there is an association between the number of accidents and weekdays
+- Number of car accidents vs day or night - whether there is an association between the number of accidents and the day or night of a day
+
+- Number of car accidents vs weekdays - whether there is an association between the number of accidents and weekdays
 
 - Number of car accidents vs borough - whether there is an association between the number of accidents and different boroughs
 
-In Mapping tab, you will find:
+- Severity vs weather conditions - whether there is an association between severity and weather conditions
+
+
+In [Mapping](mapping.html) tab, you will find:
 
 - Mapping of car accidents
 
@@ -65,11 +75,11 @@ In Mapping tab, you will find:
 
 ### Collaborators
 
-Jiaoyang Li (jl6321)
+[Jiaoyang Li](https://github.com/ZoraLii)
 
-Jingyi Tian (jt3387)
+[Jingyi Tian](https://github.com/Laufeysonn)
 
-Anjing Liu (al4225)
+[Anjing Liu](https://github.com/al4225)
 
-Zining Qi (zq2209)
+[Zining Qi](https://zq2209.github.io/)
 

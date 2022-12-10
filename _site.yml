@@ -17,7 +17,7 @@ navbar:
         href: casualty.html
     - text: 'Statistical Analyses'
       menu:
-      - text: "Statistical Analyses"
+      - text: "Statistical Tests"
         href: statistical-analyses.html
       - text: "Regression Analyses"
         href: regression.html

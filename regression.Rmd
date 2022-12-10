@@ -95,7 +95,7 @@ On weekends, the average number of car accidents will decrease by approximately 
 
 ### Regression of accidents against weather condition
 
-Finally, we want to explore the association between the number of accidents and weather conditions: visibility, temperature, and pressure.
+Finally, we want to explore the association between severity and weather conditions: visibility, temperature, and pressure.
 
 This is the correlation plot between the number of accidents and weather conditions.
 
