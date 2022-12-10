@@ -18,8 +18,6 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-### Weather and Accidents
-
 We also want to investigate how weather conditions make impacts on car accidents. Weather conditions and wind speed will be used to examine the relationship between weather and accidents’ severity.
 
 ### Number of Accidents in Different Weather Condition

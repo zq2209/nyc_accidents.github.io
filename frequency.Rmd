@@ -18,8 +18,6 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-### Accident Frequency
-
 First, we will focus on factors that relate to the number of accidents. We use bar charts to illustrate the number of accidents by contributing factors, street, borough and month, and day. 
 
 ### 10 Most Common Contributing Factors

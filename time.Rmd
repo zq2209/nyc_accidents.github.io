@@ -22,8 +22,6 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-### Car Accident over Time
-
 In this section, we will explore the trend of car accidents over time. We will analyze the pattern of number of car accidents followed through hour, day, and month in five boroughs.
 
 ### Total Accidents over Month by Borough
