@@ -20,21 +20,20 @@ source("code/data_cleaning.R")
 source("code/general_formatting.R")
 ```
 
-## Chi-Squared test - Car accidents in different weekdays and different boroughs
-To test whether the proportion of numbers of car accidents in each weekday among boroughs are equal, we perform Chi-Squared test.
+### Chi-Squared test - Car accidents on weekdays among boroughs
 
-***H0***: The proportion of car accidents number in weekdays among boroughs are equal.    
-***H1***: Not all proportion of car accidents number in weekdays among boroughs are equal.
+To test whether the proportions of car accidents in each weekday among boroughs are equal, we perform the Chi-Squared test.
+
+***H0***: The proportions of car accidents on weekdays among boroughs are equal.
+
+***H1***: Not all proportions of car accidents on weekdays among boroughs are equal.
+
 ```{r, message = FALSE, warning=FALSE}
-NYC_data1 = read_csv("./data/NYC Accidents 2020.csv",
-                col_names = TRUE) %>%
-  janitor::clean_names() 
-
 week_accidents = 
-  NYC_data1 %>%
+  accidents1 %>%
   dplyr::select(crash_date, borough) %>%
-  mutate(weekdays = weekdays(NYC_data1$crash_date, abbreviate = T) ,
-         weekdays = fct_recode(weekdays, "Mon" = "周一", "Tue" = "周二", "Wed" = "周三", "Thu" = "周四", "Fri" = "周五", "Sat" = "周六", "Sun" = "周日")) %>%
+  mutate(weekdays = weekdays(accidents1$crash_date, abbreviate = T)) %>% 
+#         weekdays = fct_recode(weekdays, "Mon" = "周一", "Tue" = "周二", "Wed" = #"周三", "Thu" = "周四", "Fri" = "周五", "Sat" = "周六", "Sun" = "周日")) %>%
   filter(!is.na(borough)) %>%
   mutate(weekdays = as.factor(weekdays),
          weekdays = fct_relevel(weekdays, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
@@ -47,21 +46,18 @@ x_crit = qchisq(0.95, 24)
 x_crit
 ```
 
-**Interpretation**: At significant level α=0.05, p-value = 6.303e-07 < 0.05, so we reject the null hypothesis and conclude that there is at least one borough’s proportion of car accidents for weekdays is different from others.
+**Interpretation**: At significant level $\alpha$ = 0.05, $p-value$ = 6.303e-07 < 0.05, so we reject the null hypothesis and conclude that there is at least one borough’s proportion of car accidents for weekdays different from others.
 
+### Chi-square test - Car type’s proportion of accident amounts among boroughs
 
-## Chi-square test - Each borough Car type’s proportion of accident amounts
+To test whether the proportions of car accidents in five car types among boroughs are equal, we performed the Chi-square test.   
 
-To test whether the proportion of numbers of car accidents in each five car types among boroughs are equal, we performed Chi-square test.   
+***H0***: Proportions of accident amounts for five car types are equal among boroughs.   
+***H1***: Not all proportions of accident amounts for five car types are not equal among boroughs.   
 
-***H0***: Each borough’s proportion of accident amounts for five car types are same.   
-***H1***: Each borough’s proportion of accident amounts for five car types are not same.   
 ```{r, message = FALSE, warning=FALSE}
-accidents_2020 = read_csv("./data/NYC Accidents 2020.csv") %>% 
-  janitor::clean_names()
-
 five_common_cartype = 
-  accidents_2020 %>%
+  accidents1 %>%
   select(borough, vehicle_type_code_1) %>% 
   filter(vehicle_type_code_1 %in%
            c("Sedan",
@@ -86,27 +82,18 @@ five_common_cartype %>%
 ```{r, message = FALSE, warning=FALSE}
 chisq.test(five_common_cartype)
 ```
-**Interpretation**: The result of chi-square shows that χ2>χcrit, at significant level α=0.05, so we reject the null hypothesis and conclude that there does exist at least one car type's proportion of accident amounts is different than others.
 
+**Interpretation**: At significant level $\alpha$ = 0.05, the result of chi-square shows that $\chi^2$ > $\chi_{crit}$, so we reject the null hypothesis and conclude that there is at least one car type's proportion of accident amounts different from others.
 
+### Proportion test - The proportions of car accidents among boroughs
 
-## Proportion test - The proportions of car accidents across boroughs. 
+We want to see whether the car accident rates are the same among boroughs, so we conduct a proportion test. We obtained the population of each borough from the most recent census.  
 
-We want to see whether the car accidents rates are same of each borough, so we conduct a proportion test. We derived the population of each borough from the most recent census.  
+***H0***: The proportions of the car accidents are equal among boroughs.  
 
-***H0***: The proportion of the car accidents is the same across all boroughs.  
-***H1***: The proportion of the car accidents is not the same across all boroughs.  
+***H1***: The proportions of the car accidents are not equal among boroughs.  
+
 ```{r, message = FALSE, warning=FALSE}
-data <- read.csv("./data/NYC Accidents 2020.csv") %>% 
-  janitor::clean_names() %>% 
-  select(crash_date, crash_time, borough, number_of_persons_injured, 
-  number_of_persons_killed, number_of_pedestrians_injured, 
-  number_of_pedestrians_killed, number_of_cyclist_injured, 
-  number_of_cyclist_killed, number_of_motorist_injured, 
-  number_of_motorist_killed) %>% 
-#delete the NAs in borough
-  filter(borough %in% c("BRONX", "BROOKLYN", "QUEENS", "MANHATTAN", "STATEN ISLAND"))
-
 url = "https://www.citypopulation.de/en/usa/newyorkcity/"
 nyc_population_html = read_html(url)
 
@@ -123,7 +110,8 @@ nyc_population = tibble(
   population = population %>% str_remove_all(",") %>% as.numeric()
 ) 
   
-car_accident = data %>%
+car_accident = accidents1 %>%
+  filter(!is.na(borough)) %>%
   count(borough) %>% 
   mutate(borough = str_to_title(borough))
 
@@ -134,34 +122,20 @@ acci_popu_boro %>%
 
 prop.test(acci_popu_boro$n, acci_popu_boro$population)
 ```
-**Interpretation**: From the test result, we can see that the p-value is smaller than 0.01, so we have enough evidence to conclude that the proportions of car accidents are different across boroughs.
 
+**Interpretation**: From the test result, we can see that the $p-value$ is smaller than 0.01, so we have enough evidence to conclude that the proportions of car accidents are different across boroughs.
 
+### ANOVA Test - Month and accidents
 
-## ANOVA Test - Month and accidents
+In order to study how month is associated with the number of car accidents, we try to use an ANOVA test across months.
 
-In order to study how month are associated with the number of car accidents, We try to use an ANOVA test across months.
+***H0***: The average numbers of accidents are equal across months.   
 
-***H0***: The average number of accidents are not different across months.    
-***H1***: The average number of accidents are different across months.    
+***H1***: The average numbers of accidents are not equal across months.   
+
 ```{r, message = FALSE, warning=FALSE}
-accidents = 
-  read_csv("./data/NYC Accidents 2020.csv") %>% 
-  janitor::clean_names() %>% 
-  mutate(
-    borough = case_when(borough == "BRONX" ~ "Bronx", 
-                        borough == "BROOKLYN" ~ "Brooklyn", 
-                        borough == "QUEENS" ~ "Queens", 
-                        borough == "MANHATTAN" ~ "Manhattan", 
-                        borough == "STATEN ISLAND" ~ "Staten Island"), 
-    crash_date = as.Date(crash_date, format = "%y-%m-%d"), 
-    weekday = weekdays(crash_date), 
-    month = month(crash_date), 
-    day = day(crash_date)
-  ) 
-
 fit_accidents = 
-  accidents %>% 
+  accidents1 %>% 
   mutate(month = as.factor(month)) %>% 
   group_by(month, weekday, day) %>% 
   dplyr::summarize(num_accidents = n()) 
@@ -170,4 +144,4 @@ anova(fit_accidents_month) %>%
   knitr::kable(caption = "One way anova of number of accidents and month", caption.pos = "top")
 ```
 
-**Interpretation**: As indicated by the result of the ANOVA test, the p value is very small. Therefore, the null hypothesis is rejected and we can conclude that the average number of accidents are different across months in New York City in 2020.
+**Interpretation**: As indicated by the result of the ANOVA test, the $p-value$ is very small. Therefore, the null hypothesis is rejected and we can conclude that the average numbers of accidents are different across months in New York City in 2020.

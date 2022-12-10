@@ -411,26 +411,20 @@ div.tocify {
 </div>
 
 
-<div
-id="chi-squared-test---car-accidents-in-different-weekdays-and-different-boroughs"
-class="section level2">
-<h2>Chi-Squared test - Car accidents in different weekdays and different
-boroughs</h2>
-<p>To test whether the proportion of numbers of car accidents in each
-weekday among boroughs are equal, we perform Chi-Squared test.</p>
-<p><strong><em>H0</em></strong>: The proportion of car accidents number
-in weekdays among boroughs are equal.<br />
-<strong><em>H1</em></strong>: Not all proportion of car accidents number
-in weekdays among boroughs are equal.</p>
-<pre class="r"><code>NYC_data1 = read_csv(&quot;./data/NYC Accidents 2020.csv&quot;,
-                col_names = TRUE) %&gt;%
-  janitor::clean_names() 
-
-week_accidents = 
-  NYC_data1 %&gt;%
+<div id="chi-squared-test---car-accidents-on-weekdays-among-boroughs"
+class="section level3">
+<h3>Chi-Squared test - Car accidents on weekdays among boroughs</h3>
+<p>To test whether the proportions of car accidents in each weekday
+among boroughs are equal, we perform the Chi-Squared test.</p>
+<p><strong><em>H0</em></strong>: The proportions of car accidents on
+weekdays among boroughs are equal.</p>
+<p><strong><em>H1</em></strong>: Not all proportions of car accidents on
+weekdays among boroughs are equal.</p>
+<pre class="r"><code>week_accidents = 
+  accidents1 %&gt;%
   dplyr::select(crash_date, borough) %&gt;%
-  mutate(weekdays = weekdays(NYC_data1$crash_date, abbreviate = T) ,
-         weekdays = fct_recode(weekdays, &quot;Mon&quot; = &quot;周一&quot;, &quot;Tue&quot; = &quot;周二&quot;, &quot;Wed&quot; = &quot;周三&quot;, &quot;Thu&quot; = &quot;周四&quot;, &quot;Fri&quot; = &quot;周五&quot;, &quot;Sat&quot; = &quot;周六&quot;, &quot;Sun&quot; = &quot;周日&quot;)) %&gt;%
+  mutate(weekdays = weekdays(accidents1$crash_date, abbreviate = T)) %&gt;% 
+#         weekdays = fct_recode(weekdays, &quot;Mon&quot; = &quot;周一&quot;, &quot;Tue&quot; = &quot;周二&quot;, &quot;Wed&quot; = #&quot;周三&quot;, &quot;Thu&quot; = &quot;周四&quot;, &quot;Fri&quot; = &quot;周五&quot;, &quot;Sat&quot; = &quot;周六&quot;, &quot;Sun&quot; = &quot;周日&quot;)) %&gt;%
   filter(!is.na(borough)) %&gt;%
   mutate(weekdays = as.factor(weekdays),
          weekdays = fct_relevel(weekdays, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;))
@@ -438,11 +432,11 @@ week_accidents =
 table(week_accidents$borough, week_accidents$weekdays)</code></pre>
 <pre><code>##                
 ##                  Mon  Tue  Wed  Thu  Fri  Sat  Sun
-##   BRONX         1347 1339 1296 1448 1511 1378 1098
-##   BROOKLYN      2337 2450 2391 2557 2758 2363 2051
-##   MANHATTAN      993 1103 1084 1184 1286  934  769
-##   QUEENS        1995 1939 2014 2011 2222 2046 1790
-##   STATEN ISLAND  178  221  198  209  250  205  185</code></pre>
+##   Bronx         1347 1339 1296 1448 1511 1378 1098
+##   Brooklyn      2337 2450 2391 2557 2758 2363 2051
+##   Manhattan      993 1103 1084 1184 1286  934  769
+##   Queens        1995 1939 2014 2011 2222 2046 1790
+##   Staten Island  178  221  198  209  250  205  185</code></pre>
 <pre class="r"><code>chisq.test(table(week_accidents$borough, week_accidents$weekdays))</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s Chi-squared test
@@ -452,28 +446,26 @@ table(week_accidents$borough, week_accidents$weekdays)</code></pre>
 <pre class="r"><code>x_crit = qchisq(0.95, 24)
 x_crit</code></pre>
 <pre><code>## [1] 36.41503</code></pre>
-<p><strong>Interpretation</strong>: At significant level α=0.05, p-value
-= 6.303e-07 &lt; 0.05, so we reject the null hypothesis and conclude
-that there is at least one borough’s proportion of car accidents for
-weekdays is different from others.</p>
+<p><strong>Interpretation</strong>: At significant level <span
+class="math inline">\(\alpha\)</span> = 0.05, <span
+class="math inline">\(p-value\)</span> = 6.303e-07 &lt; 0.05, so we
+reject the null hypothesis and conclude that there is at least one
+borough’s proportion of car accidents for weekdays different from
+others.</p>
 </div>
 <div
-id="chi-square-test---each-borough-car-types-proportion-of-accident-amounts"
-class="section level2">
-<h2>Chi-square test - Each borough Car type’s proportion of accident
-amounts</h2>
-<p>To test whether the proportion of numbers of car accidents in each
-five car types among boroughs are equal, we performed Chi-square
-test.</p>
-<p><strong><em>H0</em></strong>: Each borough’s proportion of accident
-amounts for five car types are same.<br />
-<strong><em>H1</em></strong>: Each borough’s proportion of accident
-amounts for five car types are not same.</p>
-<pre class="r"><code>accidents_2020 = read_csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
-  janitor::clean_names()
-
-five_common_cartype = 
-  accidents_2020 %&gt;%
+id="chi-square-test---car-types-proportion-of-accident-amounts-among-boroughs"
+class="section level3">
+<h3>Chi-square test - Car type’s proportion of accident amounts among
+boroughs</h3>
+<p>To test whether the proportions of car accidents in five car types
+among boroughs are equal, we performed the Chi-square test.</p>
+<p><strong><em>H0</em></strong>: Proportions of accident amounts for
+five car types are equal among boroughs.<br />
+<strong><em>H1</em></strong>: Not all proportions of accident amounts
+for five car types are not equal among boroughs.</p>
+<pre class="r"><code>five_common_cartype = 
+  accidents1 %&gt;%
   select(borough, vehicle_type_code_1) %&gt;% 
   filter(vehicle_type_code_1 %in%
            c(&quot;Sedan&quot;,
@@ -570,34 +562,26 @@ five_common_cartype %&gt;%
 ## 
 ## data:  five_common_cartype
 ## X-squared = 1614.5, df = 20, p-value &lt; 2.2e-16</code></pre>
-<p><strong>Interpretation</strong>: The result of chi-square shows that
-χ2&gt;χcrit, at significant level α=0.05, so we reject the null
-hypothesis and conclude that there does exist at least one car type’s
-proportion of accident amounts is different than others.</p>
+<p><strong>Interpretation</strong>: At significant level <span
+class="math inline">\(\alpha\)</span> = 0.05, the result of chi-square
+shows that <span class="math inline">\(\chi^2\)</span> &gt; <span
+class="math inline">\(\chi_{crit}\)</span>, so we reject the null
+hypothesis and conclude that there is at least one car type’s proportion
+of accident amounts different from others.</p>
 </div>
 <div
-id="proportion-test---the-proportions-of-car-accidents-across-boroughs."
-class="section level2">
-<h2>Proportion test - The proportions of car accidents across
-boroughs.</h2>
-<p>We want to see whether the car accidents rates are same of each
-borough, so we conduct a proportion test. We derived the population of
+id="proportion-test---the-proportions-of-car-accidents-among-boroughs"
+class="section level3">
+<h3>Proportion test - The proportions of car accidents among
+boroughs</h3>
+<p>We want to see whether the car accident rates are the same among
+boroughs, so we conduct a proportion test. We obtained the population of
 each borough from the most recent census.</p>
-<p><strong><em>H0</em></strong>: The proportion of the car accidents is
-the same across all boroughs.<br />
-<strong><em>H1</em></strong>: The proportion of the car accidents is not
-the same across all boroughs.</p>
-<pre class="r"><code>data &lt;- read.csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  select(crash_date, crash_time, borough, number_of_persons_injured, 
-  number_of_persons_killed, number_of_pedestrians_injured, 
-  number_of_pedestrians_killed, number_of_cyclist_injured, 
-  number_of_cyclist_killed, number_of_motorist_injured, 
-  number_of_motorist_killed) %&gt;% 
-#delete the NAs in borough
-  filter(borough %in% c(&quot;BRONX&quot;, &quot;BROOKLYN&quot;, &quot;QUEENS&quot;, &quot;MANHATTAN&quot;, &quot;STATEN ISLAND&quot;))
-
-url = &quot;https://www.citypopulation.de/en/usa/newyorkcity/&quot;
+<p><strong><em>H0</em></strong>: The proportions of the car accidents
+are equal among boroughs.</p>
+<p><strong><em>H1</em></strong>: The proportions of the car accidents
+are not equal among boroughs.</p>
+<pre class="r"><code>url = &quot;https://www.citypopulation.de/en/usa/newyorkcity/&quot;
 nyc_population_html = read_html(url)
 
 population = nyc_population_html %&gt;% 
@@ -613,7 +597,8 @@ nyc_population = tibble(
   population = population %&gt;% str_remove_all(&quot;,&quot;) %&gt;% as.numeric()
 ) 
   
-car_accident = data %&gt;%
+car_accident = accidents1 %&gt;%
+  filter(!is.na(borough)) %&gt;%
   count(borough) %&gt;% 
   mutate(borough = str_to_title(borough))
 
@@ -669,35 +654,20 @@ acci_popu_boro %&gt;%
 ##      prop 1      prop 2      prop 3      prop 4      prop 5 
 ## 0.006394577 0.006179292 0.004339971 0.005827150 0.002916810</code></pre>
 <p><strong>Interpretation</strong>: From the test result, we can see
-that the p-value is smaller than 0.01, so we have enough evidence to
-conclude that the proportions of car accidents are different across
-boroughs.</p>
+that the <span class="math inline">\(p-value\)</span> is smaller than
+0.01, so we have enough evidence to conclude that the proportions of car
+accidents are different across boroughs.</p>
 </div>
-<div id="anova-test---month-and-accidents" class="section level2">
-<h2>ANOVA Test - Month and accidents</h2>
-<p>In order to study how month are associated with the number of car
-accidents, We try to use an ANOVA test across months.</p>
-<p><strong><em>H0</em></strong>: The average number of accidents are not
-different across months.<br />
-<strong><em>H1</em></strong>: The average number of accidents are
-different across months.</p>
-<pre class="r"><code>accidents = 
-  read_csv(&quot;./data/NYC Accidents 2020.csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  mutate(
-    borough = case_when(borough == &quot;BRONX&quot; ~ &quot;Bronx&quot;, 
-                        borough == &quot;BROOKLYN&quot; ~ &quot;Brooklyn&quot;, 
-                        borough == &quot;QUEENS&quot; ~ &quot;Queens&quot;, 
-                        borough == &quot;MANHATTAN&quot; ~ &quot;Manhattan&quot;, 
-                        borough == &quot;STATEN ISLAND&quot; ~ &quot;Staten Island&quot;), 
-    crash_date = as.Date(crash_date, format = &quot;%y-%m-%d&quot;), 
-    weekday = weekdays(crash_date), 
-    month = month(crash_date), 
-    day = day(crash_date)
-  ) 
-
-fit_accidents = 
-  accidents %&gt;% 
+<div id="anova-test---month-and-accidents" class="section level3">
+<h3>ANOVA Test - Month and accidents</h3>
+<p>In order to study how month is associated with the number of car
+accidents, we try to use an ANOVA test across months.</p>
+<p><strong><em>H0</em></strong>: The average numbers of accidents are
+equal across months.</p>
+<p><strong><em>H1</em></strong>: The average numbers of accidents are
+not equal across months.</p>
+<pre class="r"><code>fit_accidents = 
+  accidents1 %&gt;% 
   mutate(month = as.factor(month)) %&gt;% 
   group_by(month, weekday, day) %&gt;% 
   dplyr::summarize(num_accidents = n()) 
@@ -736,9 +706,10 @@ anova(fit_accidents_month) %&gt;%
 </tbody>
 </table>
 <p><strong>Interpretation</strong>: As indicated by the result of the
-ANOVA test, the p value is very small. Therefore, the null hypothesis is
-rejected and we can conclude that the average number of accidents are
-different across months in New York City in 2020.</p>
+ANOVA test, the <span class="math inline">\(p-value\)</span> is very
+small. Therefore, the null hypothesis is rejected and we can conclude
+that the average numbers of accidents are different across months in New
+York City in 2020.</p>
 </div>
 
 
